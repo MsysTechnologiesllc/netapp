@@ -23,7 +23,7 @@ default_action :create
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
 attribute :svm, :kind_of => String, :required => true
 attribute :protocols, :kind_of => Array
-attribute :home_node. :kind_of => String
+attribute :home_node, :kind_of => String
 attribute :home_port, :kind_of => Fixnum
 attribute :ip_address, :kind_of => String
 attribute :network_mask, :kind_of => String
