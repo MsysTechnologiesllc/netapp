@@ -1,4 +1,4 @@
-/netapp/libraries/NaElement.rb
-/netapp/libraries/NaErrno.rb
-/netapp/libraries/NaServer.rb
-/netapp/libraries/DfmErrno.rb
+libraries/NaElement.rb
+libraries/NaErrno.rb
+libraries/NaServer.rb
+libraries/DfmErrno.rb
