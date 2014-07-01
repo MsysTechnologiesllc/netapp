@@ -21,8 +21,15 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :password, :kind_of => String
-attribute :status, :kind_of => String, :default => "enabled" #TODO - valid values: ["enabled", "disabled", "expired"]
+attribute :password, :kind_of => String, :required => true
+attribute :status, :kind_of => String, :default => "enabled", :equal_to => ["enabled", "disabled", "expired"]
 attribute :passminage, :kind_of => Fixnum, :default => 0
 attribute :passmaxage, :kind_of => Fixnum
-attribute :groups, :kind_of => Array, :default => nil #TODO - check if group is valid
+attribute :groups, :kind_of => Array, :required => true, :default => nil
+
+# attribute :url
+# attribute :https, :kind_of => [TrueClass, FalseClass], :default => true
+# attribute :user, :kind_of => String
+# attribute :password, :kind_of => String
+# attribute :fqdn, :kind_of => String
+# attribute :virtual_filer, :kind_of => String
