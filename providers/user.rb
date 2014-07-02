@@ -20,7 +20,7 @@
 include NetApp::Api
 
 action :create do
-  #unless exists?
+  unless exists?
     user_info = NaElement.new("user-info")
 
     # Add values
@@ -46,7 +46,7 @@ action :create do
     # Add the user
     result = invoke('useradmin-user-info','password', @resource[:password], 'useradmin-user', user_info)
 
-  #end
+  end
 end
 
 action :delete do
@@ -58,5 +58,5 @@ end
 private
   def exists?
     #TODO check if user exists
-    true
+    false
   end
