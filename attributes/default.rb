@@ -1,6 +1,6 @@
 #template
 
-#default[:netapp][:url] = 'https://root:secret@pfiler01.example.com/vfiler01'
+default[:netapp][:url] = 'https://root:secret@pfiler01.example.com/vfiler01'
 
 #### or
 

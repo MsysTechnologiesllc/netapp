@@ -17,9 +17,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'libraries/NaElement'
-require 'libraries/netapp_api'
-include 'Chef::NetApp::Api'
+include NetApp::Api
 
 action :create do
   #unless exists?

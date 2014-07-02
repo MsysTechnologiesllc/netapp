@@ -1,6 +1,3 @@
-require 'NaServer'
-
-module Chef
   module NetApp
     module Api
 
@@ -51,4 +48,3 @@ module Chef
 
     end
   end
-end
