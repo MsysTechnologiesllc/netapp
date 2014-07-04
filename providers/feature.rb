@@ -15,7 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :enable do
-  #Ensures the NetApp provides this feature - how?
-  #Enable the feature
+
+  license_code = NaElement.new("licence-code-v2")
+  license_code.child_add_string("license-key", new_resource.code)
+  license_code.child_add_string("package", new_resource.package)
+
+  result = invoke("license-v2-add","codes",license_code)
 end
