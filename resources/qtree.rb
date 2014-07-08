@@ -26,5 +26,5 @@ attribute :volume, :kind_of => String, :required => true
 attribute :export_policy, :kind_of => String
 attribute :mode, :kind_of => String
 attribute :oplocks, :kind_of => String, :equal_to => ["enabled", "disabled"] #Possible values: "enabled", "disabled". Default value is the oplock mode of the volume.
-attribute :security, :kind_of => String, , :equal_to => ["unix", "ntfs", "mixed"] #Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
+attribute :security, :kind_of => String, :equal_to => ["unix", "ntfs", "mixed"] #Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
 attribute :force, :kind_of => [TrueClass, FalseClass], :default =>false

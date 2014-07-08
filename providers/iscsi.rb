@@ -15,8 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-action :create do
+require 'pry'
 
+include NetApp::Api
+action :create do
+  result = invoke("system-get-version")
+  binding.pry
+  puts result
 end
 
 action :delete do
