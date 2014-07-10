@@ -20,30 +20,38 @@
 include NetApp::Api
 
 action :create do
-  user_info = NaElement.new("useradmin-user-info")
+  request = NaElement.new("security-login-create")
+  request.child_add_string("application", new_resource.application)
+  request.child_add_string("authentication_method", new_resource.authentication_method)
+  request.child_add_string("role-name", new_resource.role_name)  # raise exception if parameter not supplied
+  request.child_add_string("user-name", new_resource.name)
+  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("password", new_resource.password) if new_resource.password
+  request.child_add_string("comment", new_resource.comment) if new_resource.comment
 
-  # Add values
-  user_info.child_add_string("name", new_resource.name)
-  user_info.child_add_string("status", new_resource.status) if new_resource.status
-  user_info.child_add_string("password-minimum-age", new_resource.passminage) if new_resource.passminage
-  user_info.child_add_string("password-maximum-age", new_resource.passmaxage) if new_resource.passminage
+  if new_resource.authentication_method == "urm"
+    snmpv3_login_info = NaElement.new("snmpv3_login_info_params")
+    snmpv3_login_info_params = NaElement.new("snmpv3_login_info_params")
+    snmpv3_login_info_params.child_add_string("authentication_password", new_resource.authentication_password) if new_resource.authentication_password
+    snmpv3_login_info_params.child_add_string("authentication_protocol", new_resource.authentication_protocol) if new_resource.authentication_protocol
+    snmpv3_login_info_params.child_add_string("privacy_protocol", new_resource.privacy_protocol) if new_resource.privacy_protocol
+    snmpv3_login_info_params.child_add_string("privacy_password", new_resource.privacy_password) if new_resource.privacy_password
+    snmpv3_login_info_params.child_add_string("engine_id", new_resource.engine_id) if new_resource.engine_id
 
-  # Create user-groups container
-  user_groups = NaElement.new("user-groups")
-
-  new_resource.groups.each do |group|
-    group_info = NaElement.new("useradmin-group-info")
-    group_info.child_add_string("name", group)
-    user_groups.child_add(group_info)
+    snmpv3_login_info.child_add(snmpv3_login_info_params)
+    request.child_add(snmpv3_login_info)
   end
 
-  # Put it all together
-  user_info.child_add(user_groups)
+  result = invoke_elem(request)
 
-  # Add the user
-  result = invoke("useradmin-user-add","password", @resource[:password], "useradmin-user", user_info)
 end
 
 action :delete do
-  result = invoke("useradmin-user-delete", "user-name", new_resource.name)
+  request = NaElement.new("security-login-create")
+  request.child_add_string("application", new_resource.application)
+  request.child_add_string("authentication_method", new_resource.authentication_method)
+  request.child_add_string("user-name", new_resource.name)
+  request.child_add_string("vserver", new_resource.vserver)
+
+  result = invoke_elem(request)
 end
