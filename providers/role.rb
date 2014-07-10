@@ -15,38 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
-  unless exists?
-    #TODO create role
-  end
-  user_info = NaElement.new("useradmin-user-info")
-  user_info.child_add_string("name", new_resource.name)
-  user_info.child_add_string("comment", new_resource.comment) if new_resource.comment
+  request = NaElement.new("security-login-role-create")
+  request.child_add_string("role-name", new_resource.name)
+  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("command-directory-name", new_resource.command_directory)
+  request.child_add_string("access-level", new_resource.access_level) if new_resource.access_level
+  request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
+  request.child_add_string("role-query", new_resource.role_query) if new_resource.role_query
 
-  if new_resource.capabilities
-    user_capabilities = NaElement.new("user-capabilities")
-
-    new_resource.capabilities.each do |capability|
-      user_capability = NaElement.new("useradmin-capability-info")
-      user_capability.child_add_string("name",capability)
-      user_capabilities.child_add(user_capability)
-    end
-    user_info.child_add(user_capabilities)
-  end
-
-  result = invoke("useradmin-role-add", "useradmin-role", user_info)
+  result = invoke_elem(request)
 end
 
 action :delete do
-  if exists?
-    #TODO delete role
-  end
+  request = NaElement.new("security-login-role-delete")
+  request.child_add_string("role-name", new_resource.name)
+  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("command-directory-name", new_resource.command_directory)
 
-  result = invoke("useradmin-role-delete", "user-name", new_resource.name)
+  result = invoke_elem(request)
 end
-
-private
-  def exists?
-    #TODO check if role  exists
-    true
-  end

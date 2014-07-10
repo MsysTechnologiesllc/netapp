@@ -20,11 +20,26 @@
 actions :create, :delete
 default_action :create
 
-attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :svm, :kind_of => String, :required => true
-attribute :protocols, :kind_of => Array
+attribute :name, :kind_of => String, :required => true, :name_attribute => true #interface-name
+attribute :vserver, :kind_of => String, :required => true
+
+#optional parameters
+attribute :address, :kind_of => String
+attribute :administrative_status, :kind_of => String, :equal_to => ["up", "down", "unknown"]
+attribute :comment, :kind_of => String
+attribute :data_protocols, :kind_of => Array, :equal_to => ["nfs", "cifs", "iscsi", "fcp", "fcache", "none"]
+attribute :dns_domain_name
+attribute :failover_group, :kind_of => String
+attribute :failover_policy, :kind_of => String, :equal_to => ["nextavail", "priority", "disabled"]
+attribute :firewall_policy, :kind_of => String
 attribute :home_node, :kind_of => String
-attribute :home_port, :kind_of => Fixnum
-attribute :ip_address, :kind_of => String
-attribute :network_mask, :kind_of => String
-attribute :default_gateway, :kind_of => String
+attribute :home_port, :kind_of => String
+attribute :is_auto_revert, :kind_of => [TrueClass, FalseClass]
+attribute :is_ipv4_link_local, :kind_of => [TrueClass, FalseClass]
+attribute :listen_for_dns_query, :kind_of => [TrueClass, FalseClass]
+attribute :netmask, :kind_of => String
+attribute :netmask_length, :kind_of => Integer
+attribute :return_record, :kind_of => [TrueClass, FalseClass]
+attribute :role, :kind_of => String, :equal_to => ["undef", "cluster", "data", "node_mgmt", "intercluster", "cluster_mgmt"]
+attribute :routing_group_name, :kind_of => String
+attribute :use_failover_group, :kind_of => String, :equal_to => ["system_defined", "disabled", "enabled"]

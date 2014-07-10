@@ -19,9 +19,14 @@ include NetApp::Api
 
 action :enable do
 
-  license_code = NaElement.new("licence-code-v2")
-  license_code.child_add_string("license-key", new_resource.code)
-  license_code.child_add_string("package", new_resource.package)
+  request = NaElement.new("license-v2-add")
+  codes = NaElement.new("codes")
 
-  result = invoke("license-v2-add","codes",license_code)
+  new_resource.codes.each do |code|
+    license_code = NaElement.new("license-code-v2", code)
+    codes.child_add(license_code)
+  end
+
+  request.child_add(codes)
+  result = invoke_elem(request)
 end

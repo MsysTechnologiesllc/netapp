@@ -45,8 +45,13 @@ module NetApp
       if args.empty?
         @server.invoke(netapp_api)
       else
-        @server.invoke(netapp_api, args)
+        @server.invoke(netapp_api, *args)
       end
+    end
+
+    def invoke_elem(request)
+      @server = connect
+      @server.invoke_elem(request)
     end
   end
 end

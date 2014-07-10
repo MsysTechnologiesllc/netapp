@@ -21,5 +21,10 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :comment, :kind_of => String
-attribute :capabilities, :kind_of => Array
+attribute :vserver, :kind_of => String, :required => true
+attribute :command_directory, :kind_of => String, :required => true
+
+#optional parameters
+attribute :access_level, :kind_of => String, :equal_to => ["none", "readonly", "all"]
+attribute :return_record, :kind_of => [TrueClass, FalseClass]
+attribute :role_query, :kind_of => String
