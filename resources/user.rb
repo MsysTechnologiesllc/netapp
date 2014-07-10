@@ -20,13 +20,13 @@
 actions :create, :delete
 default_action :create
 
-attribute :name, :kind_of => String, :required => true, :name_attribute => true
+attribute :name, :kind_of => String, :required => true, :name_attribute => true  #user-name
 attribute :application, :kind_of => String, :required => true, :equal_to => ["console", "http", "ontapi", "rsh", "snmp", "sp", "ssh", "telnet"]
 attribute :vserver, :kind_of => String, :required => true
-attribute :authentication_method, :kind_of => String, :required => true, :equal_to => ["community", "password", "publickey", "domain", "nsswitch", "usm"]
+attribute :authentication, :kind_of => String, :required => true, :equal_to => ["community", "password", "publickey", "domain", "nsswitch", "usm"]
 
 #optional parameters
-attribute :role_name, :kind_of => String  # This parameters is required for user creation.
+attribute :role, :kind_of => String  # This parameters is required for user creation.
 attribute :password, :kind_of => String
 attribute :comment, :kind_of => String
 
