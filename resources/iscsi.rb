@@ -21,7 +21,7 @@ actions :create, :delete
 default_action :create
 
 attribute :isgroup_name, :kind_of => String, :required => true, :name_attribute => true
-attribute :password, :kind_of => String, :required => true
+#attribute :password, :kind_of => String, :required => true
 attribute :initiators, :kind_of => Array
 attribute :initiator_os, :kind_of => String
 attribute :lun_name, :kind_of => String

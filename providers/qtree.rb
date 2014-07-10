@@ -16,9 +16,22 @@
 # limitations under the License.
 
 action :create do
+  *params = "qtree-create"
+  params.push("qtree", new_resource.name)
+  params.push("volume", new_resource.volume)
+  params.push("mode", new_resource.mode) if new_resource.mode
+  params.push("export_policy", new_resource.export_policy) if new_resource.export_policy
+  params.push("oplocks", new_resource.oplocks) if new_resource.oplocks
+  params.push("security", new_resource.security) if new_resource.security
+
+  result = invoke(params)
 
 end
 
 action :delete do
+  *params = "qtree-delete"
+  params.push("qtree", new_resource.name)
+  prarms.push("force", new_resource.force) if new_resource.force
 
+  result = invoke(params)
 end

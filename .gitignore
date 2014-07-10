@@ -1,0 +1,10 @@
+sdk/NaElement.rb
+sdk/NaErrno.rb
+sdk/NaServer.rb
+sdk/DfmErrno.rb
+providers/aggregate.rb
+resources/aggregate.rb
+libraries/NaElement.rb
+libraries/NaErrno.rb
+libraries/NaServer.rb
+libraries/DfmErrno.rb

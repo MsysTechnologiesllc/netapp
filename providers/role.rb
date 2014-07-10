@@ -19,12 +19,30 @@ action :create do
   unless exists?
     #TODO create role
   end
+  user_info = NaElement.new("useradmin-user-info")
+  user_info.child_add_string("name", new_resource.name)
+  user_info.child_add_string("comment", new_resource.comment) if new_resource.comment
+
+  if new_resource.capabilities
+    user_capabilities = NaElement.new("user-capabilities")
+
+    new_resource.capabilities.each do |capability|
+      user_capability = NaElement.new("useradmin-capability-info")
+      user_capability.child_add_string("name",capability)
+      user_capabilities.child_add(user_capability)
+    end
+    user_info.child_add(user_capabilities)
+  end
+
+  result = invoke("useradmin-role-add", "useradmin-role", user_info)
 end
 
 action :delete do
   if exists?
     #TODO delete role
   end
+
+  result = invoke("useradmin-role-delete", "user-name", new_resource.name)
 end
 
 private

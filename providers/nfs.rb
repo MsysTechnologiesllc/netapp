@@ -17,6 +17,31 @@
 
 action :create do
 
+  rules = NaElement.new("nfs-rules")
+  exports_rule_info = NaElement.new("exports-rule-info-2")
+  exports_rule_info.child_add_string("pathname", new_resource.pathname)
+
+  security_rules = NaElement.new("security-rules-info")
+
+  # Add values
+  user_info.child_add_string("name", new_resource.name)
+  user_info.child_add_string("status", new_resource.status) if new_resource.status
+  user_info.child_add_string("password-minimum-age", new_resource.passminage) if new_resource.passminage
+  user_info.child_add_string("password-maximum-age", new_resource.passmaxage) if new_resource.passminage
+
+  # Create user-groups container
+  user_groups = NaElement.new("user-groups")
+
+  new_resource.groups.each do |group|
+    group_info = NaElement.new("useradmin-group-info")
+    group_info.child_add_string("name", group)
+    user_groups.child_add(group_info)
+  end
+
+  # Put it all together
+  user_info.child_add(user_groups)
+
+  # Add the user
 end
 
 action :delete do
