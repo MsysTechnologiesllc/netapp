@@ -2,4 +2,3 @@ libraries/NaElement.rb
 libraries/NaErrno.rb
 libraries/NaServer.rb
 libraries/DfmErrno.rb
-attributes/default.rb
