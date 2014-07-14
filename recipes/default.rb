@@ -83,3 +83,17 @@
 
 #   action :delete
 # end
+
+# netapp_volume 'arj_vol' do
+#   svm "arjun-test"
+#   aggregate "aggr1"
+#   size "2.5g"
+
+#   action :create
+# end
+
+# netapp_volume 'arj_vol' do
+#   svm "arjun-test"
+
+#   action :delete
+# end

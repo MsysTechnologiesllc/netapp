@@ -43,7 +43,7 @@ module NetApp
       @server
     end
 
-    def invoke(netapp_api, svm = nil, *args)  # is it required?
+    def invoke(netapp_api, svm = nil, *args)
       @server = connect
       @server.set_vfiler(svm) if svm
       if args.empty?
