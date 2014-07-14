@@ -5,6 +5,10 @@ module NetApp
 
       if node[:netapp][:url]
         @url = URI.parse(node[:netapp][:url])
+        raise ArgumentError, "Invalid scheme #{@url.scheme}. Must be https/http" unless @url.scheme == 'https' || @url.scheme == 'http'
+        raise ArgumentError, "no user specified" unless @url.user
+        raise ArgumentError, "no password specified" unless @url.password
+
         @server ||= NaServer.new(@url.host, 1, 13)
         @server.set_admin_user(@url.user, @url.password)
         @server.set_transport_type(@url.scheme.upcase)
@@ -15,33 +19,33 @@ module NetApp
           @server.set_vfiler(@vfiler)
         end
 
-        raise ArgumentError, "Invalid scheme #{@url.scheme}. Must be https" unless @url.scheme == 'https' || @url.scheme == 'http'
-        raise ArgumentError, "no user specified" unless @url.user
-        raise ArgumentError, "no password specified" unless @url.password
       else
-        @server ||= NaServer.new(node[:netapp][:fqdn], 1, 13)
-        @server.set_admin_user(node[:netapp][user], node[:netapp][:password])
+        @server ||= begin
 
-        if node[:netapp][https] == true
-          @server.set_transport_type('HTTPS')
-          @server.set_port(443)
-        else
-          @server.set_transport_type('HTTP')
-          @server.set_port(8080)
+          raise ArgumentError, "no user specified" unless node[:netapp][:user]
+          raise ArgumentError, "no password specified" unless node[:netapp][:password]
+          raise ArgumentError, "no host specified" unless node[:netapp][:fqdn]
+          raise ArgumentError, "no virtual file specified" unless node[:netapp][:virtual_filer]
+          NaServer.new(node[:netapp][:fqdn], 1, 13)
+          @server.set_admin_user(node[:netapp][user], node[:netapp][:password])
+
+          if node[:netapp][https] == true
+            @server.set_transport_type('HTTPS')
+            @server.set_port(443)
+          else
+            @server.set_transport_type('HTTP')
+            @server.set_port(8080)
+          end
+
+          @server.set_vfiler(node[:netapp][:virtual_filer])
         end
-
-        @server.set_vfiler(node[:netapp][:virtual_filer])
-
-        raise ArgumentError, "no user specified" unless node[:netapp][:user]
-        raise ArgumentError, "no password specified" unless node[:netapp][:password]
-        raise ArgumentError, "no host specified" unless node[:netapp][:fqdn]
-        raise ArgumentError, "no virtual file specified" unless node[:netapp][:virtual_filer]
       end
       @server
     end
 
-    def invoke(netapp_api, *args)
+    def invoke(netapp_api, svm = nil, *args)  # is it required?
       @server = connect
+      @server.set_vfiler(svm) if svm
       if args.empty?
         @server.invoke(netapp_api)
       else
@@ -49,8 +53,10 @@ module NetApp
       end
     end
 
-    def invoke_elem(request)
+    def invoke_elem(request, svm = nil)
       @server = connect
+
+      @server.set_vfiler(svm) if svm
       @server.invoke_elem(request)
     end
   end

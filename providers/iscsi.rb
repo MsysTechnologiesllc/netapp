@@ -15,15 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'pry'
-
 include NetApp::Api
+
 action :create do
-  result = invoke("system-get-version")
-  binding.pry
-  puts result
+  request = NaElement.new("iscsi-service-create")
+  request.child_add_string("alias-name", new_resource.alias) if new_resource.alias
+  request.child_add_string("node-name", new_resource.node) if new_resource.node
+  request.child_add_string("start", new_resource.start) if new_resource.start
+
+  result = invoke_elem(request, new_resource.svm)
+
 end
 
 action :delete do
+  request = NaElement.new("iscsi-service-destroy")
 
+  result = invoke_elem(request, new_resource.svm)
 end

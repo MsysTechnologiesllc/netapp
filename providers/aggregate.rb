@@ -15,15 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'pry'
 include NetApp::Api
 
 action :create do
   result = invoke("aggr-create", "aggregate", new_resource.name)
-  binding.pry
 end
 
 action :delete do
   result = invoke("aggr-destroy", "aggregate", new_resource.name)
-  binding.pry
 end

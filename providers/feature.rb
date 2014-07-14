@@ -19,6 +19,14 @@ include NetApp::Api
 
 action :enable do
 
+  #validations.
+  new_resource.codes.each do |code|
+    if (code.length !=24 && code.length != 48) && code != code.upcase
+      raise ArgumentError, "Invalid code \"#{code}\". Code should be 24 or 48 uppercase alpha only characters."
+    end
+  end
+
+  # Create API Request.
   request = NaElement.new("license-v2-add")
   codes = NaElement.new("codes")
 
@@ -27,6 +35,14 @@ action :enable do
     codes.child_add(license_code)
   end
 
+  # Invoke NetApp API.
   request.child_add(codes)
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno == 0
+    Chef::Log.debug("Features enabled.")
+  else
+    raise NetAppApiException, "Feature enable failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end

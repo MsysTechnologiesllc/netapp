@@ -6,7 +6,3 @@ netapp_user 'test' do
   groups ['admins']
   action :create
 end
-
-# netapp_user 'test' do
-#   action :delete
-# end

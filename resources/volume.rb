@@ -21,6 +21,8 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :svm, :kind_of => String, :required => true
+attribute :svm, :kind_of => String
+
+attribute :contituent_role, :kind_of => String, :equal_to => ["namespace", "data", "ns_mirror"]
 attribute :aggregate, :kind_of => String, :required => true
-attribute :size, :kind_of => String, :required => true # 1-9kmgt
+attribute :size, :kind_of => String, :required => true

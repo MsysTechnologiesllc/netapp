@@ -16,22 +16,22 @@
 # limitations under the License.
 
 action :create do
-  params = []
-  params.push("qtree", new_resource.name)
-  params.push("volume", new_resource.volume)
-  params.push("mode", new_resource.mode) if new_resource.mode
-  params.push("export_policy", new_resource.export_policy) if new_resource.export_policy
-  params.push("oplocks", new_resource.oplocks) if new_resource.oplocks
-  params.push("security", new_resource.security) if new_resource.security
+  request = NaElement.new("qtree-create")
+  request.child_add_string("qtree", new_resource.name)
+  request.child_add_string("volume", new_resource.volume)
+  request.child_add_string("export_policy", new_resource.export_policy) if new_resource.export_policy
+  request.child_add_string("mode", new_resource.mode) if new_resource.mode
+  request.child_add_string("mode", new_resource.oplocks) if new_resource.oplocks
+  request.child_add_string("mode", new_resource.security) if new_resource.security
 
-  result = invoke("qtree-create",params)
+  result = invoke_elem(request,new_resource.vserver)
 
 end
 
 action :delete do
-  params = []
-  params.push("qtree", new_resource.name)
-  prarms.push("force", new_resource.force) if new_resource.force
+  request = NaElement.new("qtree-delete")
+  request.child_add_string("qtree", new_resource.name)
+  request.child_add_string("force", new_resource.force) if new_resource.force
 
-  result = invoke("qtree-delete", params)
+  result = invoke_elem(request, new_resource.svm)
 end

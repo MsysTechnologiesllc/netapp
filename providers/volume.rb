@@ -16,19 +16,9 @@
 # limitations under the License.
 
 action :create do
-  unless exists?
-    #TODO create aggregate
-  end
+
 end
 
 action :delete do
-  if exists?
-    #TODO delete aggregate
-  end
-end
 
-private
-  def exists?
-    #TODO check if aggregate  exists
-    true
-  end
+end
