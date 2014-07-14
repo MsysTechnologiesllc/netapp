@@ -44,3 +44,10 @@ netapp_lif "clo-interface" do
 
   action :create
 end
+
+netapp_qtree 'clo-tree' do
+  volume "vol_arj"
+  svm "arjun-test"
+
+  action :create
+end

@@ -21,3 +21,9 @@ netapp_lif "clo-interface" do
 
   action :delete
 end
+
+netapp_qtree '/vol/vol_arj/clo-tree' do
+  svm "arjun-test"
+
+  action :delete
+end

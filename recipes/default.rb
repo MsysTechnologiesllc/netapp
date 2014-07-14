@@ -65,8 +65,21 @@
 #   action :create
 # end
 
-netapp_lif "clo-interface" do
-  svm "cluster1"
+# netapp_lif "clo-interface" do
+#   svm "cluster1"
 
-  action :delete
-end
+#   action :delete
+# end
+
+# netapp_qtree 'clo-tree' do
+#   volume "vol_arj"
+#   svm "arjun-test"
+
+#   action :create
+# end
+
+# netapp_qtree '/vol/vol_arj/clo-tree' do
+#   svm "arjun-test"
+
+#   action :delete
+# end

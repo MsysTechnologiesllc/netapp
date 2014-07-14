@@ -21,9 +21,10 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true #qtree
-attribute :volume, :kind_of => String, :required => true
+attribute :volume, :kind_of => String
+attribute :svm, :kind_of => String, :required => true
 
-attribute :svm, :kind_of => String # vfiler is overridden if vserver is provided
+#optional parameters
 attribute :export_policy, :kind_of => String
 attribute :mode, :kind_of => String
 attribute :oplocks, :kind_of => String, :equal_to => ["enabled", "disabled"]
