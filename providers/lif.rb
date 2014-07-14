@@ -18,9 +18,22 @@
 include NetApp::Api
 
 action :create do
+
+  # validations.
+  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.home_node
+  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.home_port
+  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.role
+
+  if new_resource.data_protocols
+    new_resource.data_protocols.each do |protocol|
+      raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless ["nfs", "cifs", "iscsi", "fcp", "fcache", "none"].include? protocol
+    end
+  end
+
+  # Create API Request.
   request = NaElement.new("net-interface-create")
 
-  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("vserver", new_resource.svm)
   request.child_add_string("home-node", new_resource.home_node)
   request.child_add_string("home-port", new_resource.home_port)
   request.child_add_string("interface-name", new_resource.name)
@@ -64,14 +77,28 @@ action :create do
 
   request.child_add_string("use-failover-group", new_resource.use_failover_group) if new_resource.use_failover_group
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "Net interface creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end
 
 action :delete do
+
+  # Create API Request.
   request = NaElement.new("net-interface-delete")
 
-  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("vserver", new_resource.svm)
   request.child_add_string("interface-name", new_resource.name)
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "Net interface deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end

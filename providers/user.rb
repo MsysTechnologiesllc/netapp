@@ -20,10 +20,15 @@
 include NetApp::Api
 
 action :create do
+
+  #validations.
+  raise ArgumentError, "Argument role is required for user creation" unless new_resource.role
+
+  # Create API Request.
   request = NaElement.new("security-login-create")
   request.child_add_string("application", new_resource.application)
   request.child_add_string("authentication-method", new_resource.authentication)
-  request.child_add_string("role-name", new_resource.role)  # raise exception if parameter not supplied
+  request.child_add_string("role-name", new_resource.role)
   request.child_add_string("user-name", new_resource.name)
   request.child_add_string("vserver", new_resource.vserver)
   request.child_add_string("password", new_resource.password) if new_resource.password
@@ -43,15 +48,29 @@ action :create do
     request.child_add(snmpv3_login_info)
   end
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "User creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end
 
 action :delete do
+
+  # Create API Request.
   request = NaElement.new("security-login-delete")
   request.child_add_string("application", new_resource.application)
   request.child_add_string("authentication-method", new_resource.authentication)
   request.child_add_string("user-name", new_resource.name)
   request.child_add_string("vserver", new_resource.vserver)
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "User deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end

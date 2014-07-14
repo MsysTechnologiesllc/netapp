@@ -18,22 +18,40 @@
 include NetApp::Api
 
 action :create do
+
+  # Create API Request.
   request = NaElement.new("security-login-role-create")
   request.child_add_string("role-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("vserver", new_resource.svm)
   request.child_add_string("command-directory-name", new_resource.command_directory)
   request.child_add_string("access-level", new_resource.access_level) if new_resource.access_level
   request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
   request.child_add_string("role-query", new_resource.role_query) if new_resource.role_query
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno == 0
+    Chef::Log.debug("Role #{new_resource.name} is created.")
+  else
+    raise "Role creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end
 
 action :delete do
+
+  # Create API Request.
   request = NaElement.new("security-login-role-delete")
   request.child_add_string("role-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.vserver)
+  request.child_add_string("vserver", new_resource.svm)
   request.child_add_string("command-directory-name", new_resource.command_directory)
 
+  # Invoke NetApp API.
   result = invoke_elem(request)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "Role deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end

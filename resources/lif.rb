@@ -21,14 +21,14 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true #interface-name
-attribute :vserver, :kind_of => String, :required => true
+attribute :svm, :kind_of => String, :required => true
 
 #optional parameters
 attribute :address, :kind_of => String
 attribute :administrative_status, :kind_of => String, :equal_to => ["up", "down", "unknown"]
 attribute :comment, :kind_of => String
-attribute :data_protocols, :kind_of => Array, :equal_to => ["nfs", "cifs", "iscsi", "fcp", "fcache", "none"]
-attribute :dns_domain_name
+attribute :data_protocols, :kind_of => Array
+attribute :dns_domain_name, :kind_of => String
 attribute :failover_group, :kind_of => String
 attribute :failover_policy, :kind_of => String, :equal_to => ["nextavail", "priority", "disabled"]
 attribute :firewall_policy, :kind_of => String

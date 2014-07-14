@@ -67,10 +67,8 @@ action :create do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno == 0
-    Chef::Log.debug("Vserver #{new_resource.name} is created.")
-  else
-    raise NetAppApiException, "Vserver creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  if result.results_errno != 0
+    raise "Vserver creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
   end
 end
 
@@ -85,9 +83,7 @@ action :delete do
 
   result = invoke_elem(request)
 
-  if resut.results_errorno == 0
-    Chef::Log.debug("Vserver #{new_resource.name} is destroyed.")
-  else
+  if resut.results_errorno != 0
     Chef::Log.error("Vserver deletion failed.")
     Chef::Log.error("Error no- #{result.results_errno}. Reason- #{result.results_reason}.")
   end

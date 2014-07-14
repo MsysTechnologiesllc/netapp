@@ -40,9 +40,7 @@ action :enable do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno == 0
-    Chef::Log.debug("Features enabled.")
-  else
-    raise NetAppApiException, "Feature enable failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  if result.results_errno != 0
+    raise "Feature enable failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
   end
 end

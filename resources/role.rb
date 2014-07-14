@@ -21,7 +21,7 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :vserver, :kind_of => String, :required => true
+attribute :svm, :kind_of => String, :required => true
 attribute :command_directory, :kind_of => String, :required => true
 
 #optional parameters

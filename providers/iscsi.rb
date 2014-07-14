@@ -18,17 +18,32 @@
 include NetApp::Api
 
 action :create do
+
+  # Create API Request.
   request = NaElement.new("iscsi-service-create")
   request.child_add_string("alias-name", new_resource.alias) if new_resource.alias
   request.child_add_string("node-name", new_resource.node) if new_resource.node
   request.child_add_string("start", new_resource.start) if new_resource.start
 
+  # Invoke NetApp API.
   result = invoke_elem(request, new_resource.svm)
 
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "ISCSI service creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end
 
 action :delete do
+
+  # Create API Request.
   request = NaElement.new("iscsi-service-destroy")
 
+  # Invoke NetApp API.
   result = invoke_elem(request, new_resource.svm)
+
+  # Check the result for any errors.
+  if result.results_errno != 0
+    raise "ISCSI service deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
+  end
 end
