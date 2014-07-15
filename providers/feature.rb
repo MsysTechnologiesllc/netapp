@@ -15,7 +15,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :enable do
-  #Ensures the NetApp provides this feature - how?
-  #Enable the feature
+
+  #validations.
+  new_resource.codes.each do |code|
+    if (code.length !=24 && code.length != 48) && code != code.upcase
+      raise ArgumentError, "Invalid code \"#{code}\". Code should be 24 or 48 uppercase alpha only characters."
+    end
+  end
+
+  # Create API Request.
+  request = NaElement.new("license-v2-add")
+  codes = NaElement.new("codes")
+
+  new_resource.codes.each do |code|
+    license_code = NaElement.new("license-code-v2", code)
+    codes.child_add(license_code)
+  end
+
+  # Invoke NetApp API.
+  request.child_add(codes)
+  result = invoke_elem(request)
+
+  # Check the result for any errors.
+  check_result(result, "feature","enable")
 end

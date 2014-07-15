@@ -15,20 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
-  unless exists?
-    #TODO create group
-  end
+
 end
 
 action :delete do
-  if exists?
-    #TODO delete group
-  end
-end
 
-private
-  def exists?
-    #TODO check if group exists
-    true
-  end
+end

@@ -20,5 +20,4 @@
 actions :enable
 default_action :enable
 
-attribute :package, :kind_of => String, :required => true, :name_attribute => true
-attribute :code, :kind_of => String #TODO 24 or 48 uppercase alpha only chars
+attribute :codes, :kind_of => Array, :required => true #24 or 48 uppercase alpha only chars
