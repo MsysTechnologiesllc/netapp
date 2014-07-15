@@ -21,10 +21,10 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true #vserver-name
-attribute :nsswitch, :kind_of => Array, :required => true
-attribute :volume, :kind_of => String, :required => true
-attribute :aggregate, :kind_of => String, :required => true
-attribute :security, :kind_of => String, :required => true, :equal_to => ["unix", "ntfs", "mixed", "unified"]
+attribute :nsswitch, :kind_of => Array
+attribute :volume, :kind_of => String
+attribute :aggregate, :kind_of => String
+attribute :security, :kind_of => String, :equal_to => ["unix", "ntfs", "mixed", "unified"]
 
 #optional attributes
 attribute :comment, :kind_of => String

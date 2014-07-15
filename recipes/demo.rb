@@ -2,10 +2,10 @@
 # Recipe:: demo
 
 
-netapp_svm "arjun-test" do
+netapp_svm "example-svm" do
   security "unix"
   aggregate "aggr1"
-  volume "vol_arj"
+  volume "root_vs"
   nsswitch ["nis"]
 
   action :create
@@ -17,24 +17,24 @@ netapp_feature "foo" do
   action :enable
 end
 
-netapp_role "clo-test" do
-  svm "arjun-test"
+netapp_role "exmple-role" do
+  svm "exmple-svm"
   command_directory "volume"
 
   action :create
 end
 
-netapp_user "clo-user" do
-  vserver "arjun-test"
-  role "clo-test"
+netapp_user "exmple-user" do
+  vserver "example-svm"
+  role "example-role"
   application "ontapi"
   authentication "password"
-  password "clotest001"
+  password "example001"
 
   action :create
 end
 
-netapp_lif "clo-interface" do
+netapp_lif "example-interface" do
   address "192.168.1.200"
   home_node "cluster1-01"
   home_port "e0a"
@@ -45,15 +45,15 @@ netapp_lif "clo-interface" do
   action :create
 end
 
-netapp_qtree 'clo-tree' do
-  volume "vol_arj"
-  svm "arjun-test"
+netapp_qtree 'example-tree' do
+  volume "root_vs"
+  svm "example-svm"
 
   action :create
 end
 
-netapp_volume 'arj_vol' do
-  svm "arjun-test"
+netapp_volume 'example-vol' do
+  svm "example-svm"
   aggregate "aggr1"
   size "2.5g"
 

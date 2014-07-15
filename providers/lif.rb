@@ -20,9 +20,9 @@ include NetApp::Api
 action :create do
 
   # validations.
-  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.home_node
-  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.home_port
-  raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless new_resource.role
+  raise ArgumentError, "Attribute home_node is required to create network interface" unless new_resource.home_node
+  raise ArgumentError, "Attribute home_port is required to create network interface" unless new_resource.home_port
+  raise ArgumentError, "Attribute role is required to create network interface" unless new_resource.role
 
   if new_resource.data_protocols
     new_resource.data_protocols.each do |protocol|
@@ -81,9 +81,7 @@ action :create do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Net interface creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "lif","create")
 end
 
 action :delete do
@@ -98,7 +96,5 @@ action :delete do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Net interface deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "lif","delete")
 end

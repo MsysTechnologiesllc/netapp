@@ -17,6 +17,7 @@
 
 action :create do
 
+  #TODO
   rules = NaElement.new("nfs-rules")
   exports_rule_info = NaElement.new("exports-rule-info-2")
   exports_rule_info.child_add_string("pathname", new_resource.pathname)
@@ -45,5 +46,5 @@ action :create do
 end
 
 action :delete do
-
+  #TODO
 end

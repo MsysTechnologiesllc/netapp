@@ -31,6 +31,7 @@ action :create do
   request.child_add_string("role-name", new_resource.role)
   request.child_add_string("user-name", new_resource.name)
   request.child_add_string("vserver", new_resource.vserver)
+
   request.child_add_string("password", new_resource.password) if new_resource.password
   request.child_add_string("comment", new_resource.comment) if new_resource.comment
 
@@ -52,9 +53,7 @@ action :create do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "User creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "user","create")
 end
 
 action :delete do
@@ -70,7 +69,5 @@ action :delete do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "User deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "user", "delete")
 end

@@ -28,10 +28,7 @@ action :create do
   result = invoke_elem(request, new_resource.svm)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Vserver creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
-
+  check_result(result, "volume","create")
 end
 
 action :delete do
@@ -42,7 +39,8 @@ action :delete do
 
   # Invoke NetApp API.
 
-  # Put volume offline
+  # The state of volume should be offline before deleting the volume.
+  # Change the state of volume to offline from online.
   result = invoke("volume-offline",new_resource.svm, "name", new_resource.name)
   if result.results_errno != 0
     raise "Failed to put volume to offline.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
@@ -52,8 +50,5 @@ action :delete do
   result = invoke_elem(request, new_resource.svm)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Vserver creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
-
+  check_result(result, "volume","delete")
 end

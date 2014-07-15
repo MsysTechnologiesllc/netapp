@@ -20,6 +20,10 @@ include NetApp::Api
 action :create do
 
   # validations.
+  raise ArgumentError, "Attribute volume is required for SVM creation" unless new_resource.volume
+  raise ArgumentError, "Attribute aggregate is required for SVM creation" unless new_resource.aggregate
+  raise ArgumentError, "Attribute security if required for SVM creation" unless new_resource.security
+
   new_resource.nsswitch.each do |switch|
     raise ArgumentError, "Invalid name-server-switch \"#{switch}\". It must be nis/file/ldap" unless ["nis", "file", "ldap"].include? switch
   end
@@ -67,24 +71,19 @@ action :create do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Vserver creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "svm","create")
 end
 
 action :delete do
-  #To-do
+  #TODO before deleting vserver
   #1- volume should be put to offline mode
   #2- volume should be deleted
-  #3- delete vm
 
+  # Vserver is deleted after deleting the volume
   request =  NaElement.new("vserver-destroy")
   request.child_add_string("vserver-name", new_resource.name)
 
   result = invoke_elem(request)
 
-  if resut.results_errorno != 0
-    Chef::Log.error("Vserver deletion failed.")
-    Chef::Log.error("Error no- #{result.results_errno}. Reason- #{result.results_reason}.")
-  end
+  check_result(result, "svm","delete")
 end

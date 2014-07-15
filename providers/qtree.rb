@@ -1,4 +1,4 @@
- # Cookbook Name:: netapp
+# Cookbook Name:: netapp
 # Provider:: qtree
 #
 # Copyright:: 2014, Chef Software, Inc <legal@getchef.com>
@@ -16,6 +16,7 @@
 # limitations under the License.
 
 include NetApp::Api
+
 action :create do
 
   #validations.
@@ -34,10 +35,7 @@ action :create do
   result = invoke_elem(request,new_resource.svm)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "qtree creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
-
+  check_result(result, "qtree","create")
 end
 
 action :delete do
@@ -51,7 +49,5 @@ action :delete do
   result = invoke_elem(request, new_resource.svm)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "qtree deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "qtree","delete")
 end

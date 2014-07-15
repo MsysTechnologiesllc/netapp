@@ -40,7 +40,5 @@ action :enable do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Feature enable failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "feature","enable")
 end

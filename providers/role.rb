@@ -32,11 +32,7 @@ action :create do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno == 0
-    Chef::Log.debug("Role #{new_resource.name} is created.")
-  else
-    raise "Role creation failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "role","create")
 end
 
 action :delete do
@@ -51,7 +47,5 @@ action :delete do
   result = invoke_elem(request)
 
   # Check the result for any errors.
-  if result.results_errno != 0
-    raise "Role deletion failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  check_result(result, "role","delete")
 end
