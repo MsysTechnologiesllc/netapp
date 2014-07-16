@@ -1,7 +1,7 @@
 # Cookbook Name:: netapp
 # Recipe:: lif
 
-netapp_lif "example-interface" do
+netapp_lif "demo-interface" do
   address "192.168.1.200"
   home_node "cluster1-01"
   home_port "e0a"
@@ -12,7 +12,7 @@ netapp_lif "example-interface" do
   action :create
 end
 
-netapp_lif "example-interface" do
+netapp_lif "demo-interface" do
   svm "cluster1"
 
   action :delete

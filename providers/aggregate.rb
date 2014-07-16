@@ -69,7 +69,7 @@ action :create do
   request.child_add_string("striping", new_resource.striping) if new_resource.striping
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "aggregate","create")
@@ -82,7 +82,7 @@ action :delete do
   request.child_add_string("plex", new_resource.plex) if new_resource.plex
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
  check_result(result, "aggregate","delete")

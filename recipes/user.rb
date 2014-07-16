@@ -2,17 +2,17 @@
 # Recipe:: user
 
 netapp_user "exmple-user" do
-  vserver "example-svm"
-  role "example-role"
+  vserver "demo-svm"
+  role "demo-role"
   application "ontapi"
   authentication "password"
-  password "example001"
+  password "demo001"
 
   action :create
 end
 
 netapp_user "exmple-user" do
-  vserver "example-svm"
+  vserver "demo-svm"
   application "ontapi"
   authentication "password"
 

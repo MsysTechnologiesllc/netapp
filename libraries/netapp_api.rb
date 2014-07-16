@@ -42,20 +42,7 @@ module NetApp
       @server
     end
 
-    def invoke(netapp_api, svm = nil, *args)
-      @server = connect
-
-      # The vserver name is set as vfiler in case of a tunneled connection.
-      @server.set_vfiler(svm) if svm
-
-      if args.empty?
-        @server.invoke(netapp_api)
-      else
-        @server.invoke(netapp_api, *args)
-      end
-    end
-
-    def invoke_elem(request, svm = nil)
+    def invoke_api(request, svm = nil)
       @server = connect
 
       # The vserver name is set as vfiler in case of a tunneled connection.

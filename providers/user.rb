@@ -50,7 +50,7 @@ action :create do
   end
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "user","create")
@@ -66,7 +66,7 @@ action :delete do
   request.child_add_string("vserver", new_resource.vserver)
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "user", "delete")

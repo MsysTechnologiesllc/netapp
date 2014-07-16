@@ -1,15 +1,15 @@
 # Cookbook Name:: netapp
 # Recipe:: qtree
 
-netapp_qtree 'example-tree' do
+netapp_qtree 'demo-tree' do
   volume "root_vs"
-  svm "example-svm"
+  svm "demo-svm"
 
   action :create
 end
 
-netapp_qtree '/vol/root_vs/example-tree' do
-  svm "example-svm"
+netapp_qtree '/vol/root_vs/demo-tree' do
+  svm "demo-svm"
 
   action :delete
 end
