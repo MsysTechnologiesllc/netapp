@@ -15,20 +15,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
-  unless exists?
-    #TODO create aggregate
-  end
+
+  # Create API Request.
+  request =  NaElement.new("volume-create")
+  request.child_add_string("volume", new_resource.name)
+  request.child_add_string("size", new_resource.size)
+  request.child_add_string("containing-aggr-name", new_resource.aggregate)
+  # Invoke NetApp API.
+  result = invoke_elem(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "volume","create")
 end
 
 action :delete do
-  if exists?
-    #TODO delete aggregate
-  end
-end
 
-private
-  def exists?
-    #TODO check if aggregate  exists
-    true
+  # Create API Request.
+  request =  NaElement.new("volume-destroy")
+  request.child_add_string("name", new_resource.name)
+
+  # Invoke NetApp API.
+
+  # The state of volume should be offline before deleting the volume.
+  # Change the state of volume to offline from online.
+  result = invoke("volume-offline",new_resource.svm, "name", new_resource.name)
+  if result.results_errno != 0
+    raise "Failed to put volume to offline.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
   end
+
+  #Destroy volume
+  result = invoke_elem(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "volume","delete")
+end

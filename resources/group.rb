@@ -22,4 +22,4 @@ default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
 attribute :comment, :kind_of => String
-attribute :roles, :kind_of => Array, :default => nil #TODO - check if role is valid
+attribute :roles, :kind_of => Array
