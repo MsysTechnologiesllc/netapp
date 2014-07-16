@@ -26,7 +26,7 @@ action :create do
   request.child_add_string("start", new_resource.start) if new_resource.start
 
   # Invoke NetApp API.
-  result = invoke_elem(request, new_resource.svm)
+  result = invoke_api(request, new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "iscsi","create")
@@ -38,7 +38,7 @@ action :delete do
   request = NaElement.new("iscsi-service-destroy")
 
   # Invoke NetApp API.
-  result = invoke_elem(request, new_resource.svm)
+  result = invoke_api(request, new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "iscsi","delete")

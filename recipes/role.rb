@@ -8,8 +8,8 @@ netapp_role "exmple-role" do
   action :create
 end
 
-netapp_role "example-role" do
-  svm "example-svm"
+netapp_role "demo-role" do
+  svm "demo-svm"
   command_directory "DEFAULT"
 
   action :delete

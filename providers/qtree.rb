@@ -32,7 +32,7 @@ action :create do
   request.child_add_string("security-style", new_resource.security) if new_resource.security
 
   # Invoke NetApp API.
-  result = invoke_elem(request,new_resource.svm)
+  result = invoke_api(request,new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "qtree","create")
@@ -46,7 +46,7 @@ action :delete do
   request.child_add_string("force", new_resource.force) if new_resource.force
 
   # Invoke NetApp API.
-  result = invoke_elem(request, new_resource.svm)
+  result = invoke_api(request, new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "qtree","delete")

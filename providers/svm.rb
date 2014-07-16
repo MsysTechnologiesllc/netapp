@@ -68,7 +68,7 @@ action :create do
   request.child_add_string("snapshot-policy", new_resource.snapshot_policy) if (new_resource.snapshot_policy)
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "svm","create")
@@ -83,7 +83,7 @@ action :delete do
   request =  NaElement.new("vserver-destroy")
   request.child_add_string("vserver-name", new_resource.name)
 
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   check_result(result, "svm","delete")
 end

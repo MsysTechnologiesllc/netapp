@@ -78,7 +78,7 @@ action :create do
   request.child_add_string("use-failover-group", new_resource.use_failover_group) if new_resource.use_failover_group
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "lif","create")
@@ -93,7 +93,7 @@ action :delete do
   request.child_add_string("interface-name", new_resource.name)
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "lif","delete")

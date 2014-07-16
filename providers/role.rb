@@ -29,7 +29,7 @@ action :create do
   request.child_add_string("role-query", new_resource.role_query) if new_resource.role_query
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "role","create")
@@ -44,7 +44,7 @@ action :delete do
   request.child_add_string("command-directory-name", new_resource.command_directory)
 
   # Invoke NetApp API.
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "role","delete")

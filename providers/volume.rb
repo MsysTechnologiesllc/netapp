@@ -25,7 +25,7 @@ action :create do
   request.child_add_string("size", new_resource.size)
   request.child_add_string("containing-aggr-name", new_resource.aggregate)
   # Invoke NetApp API.
-  result = invoke_elem(request, new_resource.svm)
+  result = invoke_api(request, new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "volume","create")
@@ -41,13 +41,12 @@ action :delete do
 
   # The state of volume should be offline before deleting the volume.
   # Change the state of volume to offline from online.
-  result = invoke("volume-offline",new_resource.svm, "name", new_resource.name)
-  if result.results_errno != 0
-    raise "Failed to put volume to offline.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
-  end
+  volume_offline_request = NaElement.new("volume-offline")
+  volume_offline_request.child_add_string("name", new_resource.name)
+  result = invoke_api(volume_offline_request, new_resource.svm)
 
   #Destroy volume
-  result = invoke_elem(request, new_resource.svm)
+  result = invoke_api(request, new_resource.svm)
 
   # Check the result for any errors.
   check_result(result, "volume","delete")

@@ -37,7 +37,7 @@ action :enable do
 
   # Invoke NetApp API.
   request.child_add(codes)
-  result = invoke_elem(request)
+  result = invoke_api(request)
 
   # Check the result for any errors.
   check_result(result, "feature","enable")
