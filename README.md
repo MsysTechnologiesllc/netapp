@@ -252,9 +252,6 @@ netapp_lif
 ----------
 SVM-management of logical interface (LIF) creation, modification and deletion.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-vserver setup -vserver vs2.example.com -network true
-
 ### Actions ###
 This resource has the following actions:
 
@@ -264,21 +261,34 @@ This resource has the following actions:
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. LIF name. Required
-* `svm` string. Name of managed SVM. Required
-* `protocols` array of strings. Protocols that can use the LIF.
-* `home_node` string. The node on which you want to create a LIF. The default home node is used if you do not specify one.
-* `home_port` integer. The port on which you want to create a LIF. The default home port is used if you do not specify one.
-* `ip_address` string.
-* `network_mask` string.
-* `default_gateway` string. Default gateway IP address
+* `name` name attribute. LIF name. Required
+* `svm` Name of managed SVM. Required
+* `address`
+* `administrative_status` valid values "up", "down", "unknown"
+* `comment`
+* `data_protocols`
+* `dns_domain_name`
+* `failover_group`
+* `failover_policy` valid values "nextavail", "priority", "disabled"
+* `firewall_policy`
+* `home_node`
+* `home_port`
+* `is_auto_revert`
+* `is_ipv4_link_local`
+* `listen_for_dns_query`
+* `netmask`
+* `netmask_length`
+* `return_record`
+* `role` valid values "undef", "cluster", "data", "node_mgmt", "intercluster", "cluster_mgmt"
+* `routing_group_name`
+* `use_failover_group` valid values "system_defined", "disabled", "enabled"
+* 
 
 ### Example ###
 
 ````ruby
 netapp_lif 'private' do
   svm 'vs1.example.com'
-  protocols ['nfs', 'iscsi']
   action :create
 end
 ````
@@ -293,24 +303,19 @@ netapp_iscsi
 ----------
 SVM-management of iSCSI target creation, modification and deletion.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the iSCSI target is in this state.
+* `:create` Default. Creates iSCSI service.
 * `:delete` Removes the target
 
 ### Attributes ###
 This resource has the following attributes:
 
-* `igroup_name` string, name attribute. Required.
-* `svm` string. Name of managed SVM. Required
-* `initiators` array of strings. Names of the initiators.
-* `initiator_os` string. Operating system type of the initiator.
-* `lun_name` string. The default LUN name is used if you do not specify one.
-* `lun_volume` string. Volume that is to be used for the LUN.
-* `lun_size` string (1-9kmgt).
+* `svm` Name of managed SVM. Required
+* `alias`
+* `node`
+* `start` True or False. True by default.
 
 ### Example ###
 
@@ -332,8 +337,6 @@ netapp_nfs
 SVM-management of NFS export rule creation, modification and deletion including NFS export security. Rule changes are persistent.
 
 You do not need to enter any information to configure NFS on the SVM. The NFS configuration is created when you specify the protocol value as `nfs`.
-
-Refer to API nfs-exportfs-append-rules-2 and security-rule-info
 
 ### Actions ###
 This resource has the following actions:
@@ -376,13 +379,14 @@ This resource has the following actions:
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. The path of the qtree, relative to the volume. Required
-* `svm` string. Name of managed SVM. Required
-* `volume` string. Name of the volume on which to create the qtree. Required.
-* `export-policy` string. Export policy of the qtree. If this input is not specified, the qtree will inherit the export policy of the parent volume.
-* `mode` string. The file permission bits of the qtree, similar to UNIX permission bits. If this argument is missing, the permissions of the volume is used.
-* `oplocks` string. Opportunistic locks mode of the qtree. Possible values: "enabled", "disabled". Default value is the oplock mode of the volume.
-* `security` string. Security style of the qtree. Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
+* `name` name attribute. The path of the qtree, relative to the volume. Required
+* `svm` Name of managed SVM. Required
+* `volume` Name of the volume on which to create the qtree. Required.
+* `export_policy` Export policy of the qtree. If this input is not specified, the qtree will inherit the export policy of the parent volume.
+* `mode` The file permission bits of the qtree, similar to UNIX permission bits. If this argument is missing, the permissions of the volume is used.
+* `oplocks` Opportunistic locks mode of the qtree. Possible values: "enabled", "disabled". Default value is the oplock mode of the volume.
+* `security` Security style of the qtree. Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
+* `force` True or false
 
 ### Example ###
 
