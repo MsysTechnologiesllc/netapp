@@ -15,36 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
+  request = NaElement.new("nfs-service-create")
 
-  #TODO
-  rules = NaElement.new("nfs-rules")
-  exports_rule_info = NaElement.new("exports-rule-info-2")
-  exports_rule_info.child_add_string("pathname", new_resource.pathname)
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
 
-  security_rules = NaElement.new("security-rules-info")
-
-  # Add values
-  user_info.child_add_string("name", new_resource.name)
-  user_info.child_add_string("status", new_resource.status) if new_resource.status
-  user_info.child_add_string("password-minimum-age", new_resource.passminage) if new_resource.passminage
-  user_info.child_add_string("password-maximum-age", new_resource.passmaxage) if new_resource.passminage
-
-  # Create user-groups container
-  user_groups = NaElement.new("user-groups")
-
-  new_resource.groups.each do |group|
-    group_info = NaElement.new("useradmin-group-info")
-    group_info.child_add_string("name", group)
-    user_groups.child_add(group_info)
-  end
-
-  # Put it all together
-  user_info.child_add(user_groups)
-
-  # Add the user
+  # Check the result for any errors.
+  check_result(result, "nfs","create")
 end
 
 action :delete do
-  #TODO
+  request = NaElement.new("nfs-service-destroy")
+
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "nfs","delete")
 end

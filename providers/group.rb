@@ -18,9 +18,36 @@
 include NetApp::Api
 
 action :create do
+  # validations.
+  raise ArgumentError, "Attribute position is required for group creation" unless new_resource.pattern
+  raise ArgumentError, "Attribute replacement is required for group creation" unless new_resource.replacement
+  raise ArgumentError, "Attribute replacement is required for group creation" if new_resource.position > 1024 || new_resource.position < 1
 
+  # Create API Request.
+  request =  NaElement.new("group-mapping-create")
+  request.child_add_string("direction", new_resource.direction)
+  request.child_add_string("pattern", new_resource.pattern)
+  request.child_add_string("position", new_resource.position)
+  request.child_add_string("replacement", new_resource.replacement)
+
+  request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
+
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "group","create")
 end
 
 action :delete do
+  # Create API Request.
+  request =  NaElement.new("group-mapping-delete")
+  request.child_add_string("direction", new_resource.direction)
+  request.child_add_string("position", new_resource.position)
 
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "group","create")
 end

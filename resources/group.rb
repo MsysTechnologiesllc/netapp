@@ -20,6 +20,9 @@
 actions :create, :delete
 default_action :create
 
-attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :comment, :kind_of => String
-attribute :roles, :kind_of => Array
+attribute :direction, :kind_of => String, :equal_to => ["krb_unix", "win_unix", "unix_win"], :required => true
+attribute :svm, :kind_of => String, :required => true
+attribute :position, :kind_of => Integer, :required => true
+attribute :pattern, :kind_of => String
+attribute :replacement, :kind_of => String
+attribute :return_record, :kind_of => [TrueClass, FalseClass]

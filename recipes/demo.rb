@@ -11,7 +11,7 @@ netapp_svm "demo-svm" do
   action :create
 end
 
-netapp_feature "foo" do
+netapp_feature "demo-feature" do
   codes ["CAYHXPKBFDUFZGABGAAAAAAAAAAA"]
 
   action :enable
@@ -29,7 +29,7 @@ netapp_user "demo-user" do
   role "demo-role"
   application "ontapi"
   authentication "password"
-  password "demo001"
+  password "demopwd001"
 
   action :create
 end
