@@ -1,5 +1,10 @@
 netapp Cookbook
 ===============
+
+[![Build Status](http://img.shields.io/travis/ClogenyTechnologies/netapp.svg)][travis]
+
+[travis]: https://travis-ci.org/ClogenyTechnologies/netapp
+
 The netapp cookbook manages the Clustered Data ONTAP (CDOT) filers using the NetApp ZAPI. The actions are cluster-wide or Storage Virtual Machine (SVM, formerly known as Vservers) specific.
 
 Requirements
@@ -39,31 +44,39 @@ Cluster management of user creation, modification and deletion.
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the user is in this state.
+* `:create` Default.
 * `:delete` Removes the user
 
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. Required
-* `password` string.
-* `status` string. Valid values are `enabled`, `disabled` and `expired`. Default is `enabled`.
-* `passminage` integer. Number of days the user’s password must be active before it may be changed. Default is 0.
-* `passmaxage` integer. Number of days the user’s password can be active before the user must change it.
-* `groups` Array of groups for this user account.
+* `name` User name. Required
+* `password` Required for non-snmp users
+* `application` Name of the application. Possible values: 'console', 'http', 'ontapi', 'rsh', 'snmp', 'sp', 'ssh', 'telnet'
+* `comment`
+* `role` Array of roles
+* `snmpv3-login-info` SNMPv3 user login information for 'usm' authentication method
+* `vserver` Name of vserver
+* `authentication` Authentication method for the application. Possible values: 'community', 'password', 'publickey', 'domain', 'nsswitch' and 'usm'
 
 ### Example ###
 
 ````ruby
-netapp_user 'joe' do
-  password 'foobar'
-  groups ['admins']
+netapp_user "clogeny" do
+  vserver "my-vserver"
+  role "admin"
+  application "ontapi"
+  authentication "password"
+  password "my-password1"
   action :create
 end
 ````
 
 ````ruby
-netapp_user 'henry' do
+netapp_user "clogeny" do
+  vserver "my-vserver"
+  application "ontapi"
+  authentication "password"
   action :delete
 end
 ````
@@ -75,7 +88,7 @@ Cluster management of group creation, modification and deletion.
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the group is in this state.
+* `:create` Default.
 * `:delete` Removes the group
 
 ### Attributes ###
@@ -108,27 +121,33 @@ Cluster management of role creation, modification and deletion.
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the role is in this state.
+* `:create` Default.
 * `:delete` Removes the role
 
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. Required
-* `comment` string.
-* `capabilities` Array of capabilities for this role.
+* `name` Name attribute. Required
+* `svm` Name of vserver. Required
+* `command_directory` The command or command directory to which the role has an access. Required
+* `access_level` Access level for the role. Possible values: 'none', 'readonly', 'all'. The default value is 'all'.
+* `return_record` If set to true, returns the security login role on successful creation. Default: false
+* `role_query` Example: The command is 'volume show' and the query is '-volume vol1'
 
 ### Example ###
 
 ````ruby
 netapp_role 'security' do
-  comment 'security'
+  svm 'my-vserver'
+  command_directory 'volume'
   action :create
 end
 ````
 
 ````ruby
 netapp_role 'superusers' do
+  svm 'my-vserver'
+  command_directory 'DEFAULT'
   action :delete
 end
 ````
@@ -145,13 +164,12 @@ This resource has the following action:
 ### Attributes ###
 This resource has the following attributes:
 
-* `package` string, name attribute. Required
 * `code` string, license code when adding a package. 24 or 48 uppercase alpha only characters.
 
 ### Example ###
 
 ````ruby
-netapp_feature 'iscsi do
+netapp_feature 'iscsi' do
   code 'ABCDEFGHIJKLMNOPQRSTUVWX'
   action :enable
 end
@@ -161,32 +179,36 @@ netapp_svm
 ----------
 Cluster-level management of a data Storage Virtual Machines (SVMs). SVM-level management is done through other resources. After the cluster setup, a cluster administrator must create data SVMs and add volumes to these SVMs to facilitate data access from the cluster. A cluster must have at least one data SVM to serve data to its clients.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the svm is in this state.
+* `:create` Default.
 * `:delete` Removes the svm
 
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. Required. SVM names can contain a period (.), a hyphen (-), or an underscore (_), but must not start with a hyphen, period, or number. The maximum number of characters allowed in SVM names is 47.
-* `protocols` array of strings. Protocols that you want to configure or allow on that SVM.
-* `services` array of strings. Services that you want to configure on the SVM.
-* `aggregate` string. Aggregate on which you want to create the root volume for the SVM. The default aggregate name is used if you do not specify one.
-* `language` string. If you do not specify the language, the default language `C.UTF-8` or `POSIX.UTF-8` is used.???
-* `security` string. Determines the type of permissions that can be used to control data access to a volume. Default is `unix`.
+* `name` name attribute. Required. SVM names can contain a period (.), a hyphen (-), or an underscore (_), but must not start with a hyphen, period, or number. The maximum number of characters allowed in SVM names is 47.
+* `nsswitch` Required.
+* `volume` Required
+* `aggregate` Required. Aggregate on which you want to create the root volume for the SVM. The default aggregate name is used if you do not specify one.
+* `security` Required. Determines the type of permissions that can be used to control data access to a volume. Default is `unix`.
+* `comment`
+* `is_repository_vserver`
+* `language` If you do not specify the language, the default language `C.UTF-8` or `POSIX.UTF-8` is used.???
+* `nmswitch`
+* `quota_policy`
+* `return_record`
+* `snapshot_policy`
 
 ### Example ###
 
 ````ruby
-netapp_svm 'vs1.example.com' do
-  protocols ['nfs', 'iscsi']
-  services ['file']
-  language 'POSIX.UTF-8'
-  aggregate 'aggr1'
+netapp_svm "example-svm" do
+  security "unix"
+  aggregate "aggr1"
+  volume "vol1"
+  nsswitch ["nis"]
   action :create
 end
 ````
@@ -195,13 +217,10 @@ netapp_volume
 -------------
 SVM-management of volume creation, modification and deletion including auto-increment, snapshot schedules and volume options.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-vserver setup -vserver vs2.example.com -storage true
-
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the volume is in this state.
+* `:create` Default.
 * `:delete` Removes the volume
 
 ### Attributes ###
@@ -233,9 +252,6 @@ netapp_lif
 ----------
 SVM-management of logical interface (LIF) creation, modification and deletion.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-vserver setup -vserver vs2.example.com -network true
-
 ### Actions ###
 This resource has the following actions:
 
@@ -245,21 +261,34 @@ This resource has the following actions:
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. LIF name. Required
-* `svm` string. Name of managed SVM. Required
-* `protocols` array of strings. Protocols that can use the LIF.
-* `home_node` string. The node on which you want to create a LIF. The default home node is used if you do not specify one.
-* `home_port` integer. The port on which you want to create a LIF. The default home port is used if you do not specify one.
-* `ip_address` string.
-* `network_mask` string.
-* `default_gateway` string. Default gateway IP address
+* `name` name attribute. LIF name. Required
+* `svm` Name of managed SVM. Required
+* `address`
+* `administrative_status` valid values "up", "down", "unknown"
+* `comment`
+* `data_protocols`
+* `dns_domain_name`
+* `failover_group`
+* `failover_policy` valid values "nextavail", "priority", "disabled"
+* `firewall_policy`
+* `home_node`
+* `home_port`
+* `is_auto_revert`
+* `is_ipv4_link_local`
+* `listen_for_dns_query`
+* `netmask`
+* `netmask_length`
+* `return_record`
+* `role` valid values "undef", "cluster", "data", "node_mgmt", "intercluster", "cluster_mgmt"
+* `routing_group_name`
+* `use_failover_group` valid values "system_defined", "disabled", "enabled"
+*
 
 ### Example ###
 
 ````ruby
 netapp_lif 'private' do
   svm 'vs1.example.com'
-  protocols ['nfs', 'iscsi']
   action :create
 end
 ````
@@ -274,24 +303,19 @@ netapp_iscsi
 ----------
 SVM-management of iSCSI target creation, modification and deletion.
 
-(Follow the "Completing the SVM setup worksheet" section of the Clustered_Data_ONTAP_82_System_Administration.pdf)
-
 ### Actions ###
 This resource has the following actions:
 
-* `:create` Default. Ensures the iSCSI target is in this state.
+* `:create` Default. Creates iSCSI service.
 * `:delete` Removes the target
 
 ### Attributes ###
 This resource has the following attributes:
 
-* `igroup_name` string, name attribute. Required.
-* `svm` string. Name of managed SVM. Required
-* `initiators` array of strings. Names of the initiators.
-* `initiator_os` string. Operating system type of the initiator.
-* `lun_name` string. The default LUN name is used if you do not specify one.
-* `lun_volume` string. Volume that is to be used for the LUN.
-* `lun_size` string (1-9kmgt).
+* `svm` Name of managed SVM. Required
+* `alias`
+* `node`
+* `start` True or False. True by default.
 
 ### Example ###
 
@@ -313,8 +337,6 @@ netapp_nfs
 SVM-management of NFS export rule creation, modification and deletion including NFS export security. Rule changes are persistent.
 
 You do not need to enter any information to configure NFS on the SVM. The NFS configuration is created when you specify the protocol value as `nfs`.
-
-Refer to API nfs-exportfs-append-rules-2 and security-rule-info
 
 ### Actions ###
 This resource has the following actions:
@@ -357,13 +379,14 @@ This resource has the following actions:
 ### Attributes ###
 This resource has the following attributes:
 
-* `name` string, name attribute. The path of the qtree, relative to the volume. Required
-* `svm` string. Name of managed SVM. Required
-* `volume` string. Name of the volume on which to create the qtree. Required.
-* `export-policy` string. Export policy of the qtree. If this input is not specified, the qtree will inherit the export policy of the parent volume.
-* `mode` string. The file permission bits of the qtree, similar to UNIX permission bits. If this argument is missing, the permissions of the volume is used.
-* `oplocks` string. Opportunistic locks mode of the qtree. Possible values: "enabled", "disabled". Default value is the oplock mode of the volume.
-* `security` string. Security style of the qtree. Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
+* `name` name attribute. The path of the qtree, relative to the volume. Required
+* `svm` Name of managed SVM. Required
+* `volume` Name of the volume on which to create the qtree. Required.
+* `export_policy` Export policy of the qtree. If this input is not specified, the qtree will inherit the export policy of the parent volume.
+* `mode` The file permission bits of the qtree, similar to UNIX permission bits. If this argument is missing, the permissions of the volume is used.
+* `oplocks` Opportunistic locks mode of the qtree. Possible values: "enabled", "disabled". Default value is the oplock mode of the volume.
+* `security` Security style of the qtree. Possible values: "unix", "ntfs", or "mixed". Default value is the security style of the volume.
+* `force` True or false
 
 ### Example ###
 
