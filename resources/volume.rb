@@ -21,6 +21,7 @@ actions :create, :delete
 default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
-attribute :svm, :kind_of => String, :required => true
+attribute :svm, :kind_of => String
+
 attribute :aggregate, :kind_of => String, :required => true
-attribute :size, :kind_of => String, :required => true # 1-9kmgt
+attribute :size, :kind_of => String, :required => true

@@ -20,9 +20,19 @@
 actions :create, :delete
 default_action :create
 
-attribute :name, :kind_of => String, :required => true, :name_attribute => true
+attribute :name, :kind_of => String, :required => true, :name_attribute => true  #user-name
+attribute :application, :kind_of => String, :required => true, :equal_to => ["console", "http", "ontapi", "rsh", "snmp", "sp", "ssh", "telnet"]
+attribute :vserver, :kind_of => String, :required => true
+attribute :authentication, :kind_of => String, :required => true, :equal_to => ["community", "password", "publickey", "domain", "nsswitch", "usm"]
+
+#optional parameters
+attribute :role, :kind_of => String  # This parameters is required for user creation.
 attribute :password, :kind_of => String
-attribute :status, :kind_of => String, :default => "enabled" #TODO - valid values: ["enabled", "disabled", "expired"]
-attribute :passminage, :kind_of => Fixnum, :default => 0
-attribute :passmaxage, :kind_of => Fixnum
-attribute :groups, :kind_of => Array, :default => nil #TODO - check if group is valid
+attribute :comment, :kind_of => String
+
+#These parameters are required only for 'usm' authentication method
+attribute :authentication_password, :kind_of => String
+attribute :authentication_protocol, :kind_of => String, :equal_to => ["none", "md5", "sha"]
+attribute :privacy_password, :kind_of => String
+attribute :privacy_protocol, :kind_of => String, :equal_to => ["none", "des"]
+attribute :engine_id, :kind_of => String

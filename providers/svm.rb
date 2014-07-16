@@ -15,20 +15,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
-  unless exists?
-    #TODO create svm
+
+  # validations.
+  raise ArgumentError, "Attribute volume is required for SVM creation" unless new_resource.volume
+  raise ArgumentError, "Attribute aggregate is required for SVM creation" unless new_resource.aggregate
+  raise ArgumentError, "Attribute security if required for SVM creation" unless new_resource.security
+
+  new_resource.nsswitch.each do |switch|
+    raise ArgumentError, "Invalid name-server-switch \"#{switch}\". It must be nis/file/ldap" unless ["nis", "file", "ldap"].include? switch
   end
+
+  if new_resource.nmswitch
+    new_resource.nmswitch.each do |switch|
+      raise ArgumentError, "Invalid name-mapping-switch \"#{switch}\". It must be file/ldap" unless ["file", "ldap"].include? switch
+    end
+  end
+
+  # Create API Request.
+  request =  NaElement.new("vserver-create")
+  request.child_add_string("vserver-name", new_resource.name)
+  request.child_add_string("root-volume-security-style", new_resource.security)
+  request.child_add_string("root-volume-aggregate", new_resource.aggregate)
+  request.child_add_string("root-volume", new_resource.volume)
+
+  name_server_switch = NaElement.new("name-server-switch")
+
+  new_resource.nsswitch.each do |switch|
+    switch = NaElement.new("nsswitch", switch)
+    name_server_switch.child_add(switch)
+  end
+  request.child_add(name_server_switch)
+
+  request.child_add_string("comment", new_resource.comment) if (new_resource.comment)
+  request.child_add_string("is-repository-vserver", new_resource.is_repository_vserver) if (new_resource.is_repository_vserver)
+  request.child_add_string("language", new_resource.language) if (new_resource.language)
+
+  if (new_resource.nmswitch)
+    name_mapping_switch = NaElement.new("name-mapping-switch")
+
+    new_resource.nmswitch.each do |switch|
+      switch = NaElement.new("nmswitch", switch)
+      name_mapping_switch.child_add(switch)
+    end
+    request.child_add(name_mapping_switch)
+  end
+
+  request.child_add_string("quota-policy", new_resource.quota_policy) if (new_resource.quota_policy)
+  request.child_add_string("return-record", new_resource.return_record) if (new_resource.return_record)
+  request.child_add_string("snapshot-policy", new_resource.snapshot_policy) if (new_resource.snapshot_policy)
+
+  # Invoke NetApp API.
+  result = invoke_elem(request)
+
+  # Check the result for any errors.
+  check_result(result, "svm","create")
 end
 
 action :delete do
-  if exists?
-    #TODO delete svm
-  end
-end
+  #TODO before deleting vserver
+  #1- volume should be put to offline mode
+  #2- volume should be deleted
 
-private
-  def exists?
-    #TODO check if svm  exists
-    true
-  end
+  # Vserver is deleted after deleting the volume
+  request =  NaElement.new("vserver-destroy")
+  request.child_add_string("vserver-name", new_resource.name)
+
+  result = invoke_elem(request)
+
+  check_result(result, "svm","delete")
+end
