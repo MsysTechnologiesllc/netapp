@@ -15,20 +15,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include NetApp::Api
+
 action :create do
-  unless exists?
-    #TODO create group
-  end
+  # validations.
+  raise ArgumentError, "Attribute position is required for group creation" unless new_resource.pattern
+  raise ArgumentError, "Attribute replacement is required for group creation" unless new_resource.replacement
+  raise ArgumentError, "Attribute replacement is required for group creation" if new_resource.position > 1024 || new_resource.position < 1
+
+  # Create API Request.
+  request =  NaElement.new("group-mapping-create")
+  request.child_add_string("direction", new_resource.direction)
+  request.child_add_string("pattern", new_resource.pattern)
+  request.child_add_string("position", new_resource.position)
+  request.child_add_string("replacement", new_resource.replacement)
+
+  request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
+
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "group","create")
 end
 
 action :delete do
-  if exists?
-    #TODO delete group
-  end
-end
+  # Create API Request.
+  request =  NaElement.new("group-mapping-delete")
+  request.child_add_string("direction", new_resource.direction)
+  request.child_add_string("position", new_resource.position)
 
-private
-  def exists?
-    #TODO check if group exists
-    true
-  end
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "group","create")
+end

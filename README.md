@@ -130,7 +130,7 @@ This resource has the following attributes:
 * `name` Name attribute. Required
 * `svm` Name of vserver. Required
 * `command_directory` The command or command directory to which the role has an access. Required
-* `access_level` Access level for the role. Possible values: 'none', 'readonly', 'all'. The default value is 'all'. 
+* `access_level` Access level for the role. Possible values: 'none', 'readonly', 'all'. The default value is 'all'.
 * `return_record` If set to true, returns the security login role on successful creation. Default: false
 * `role_query` Example: The command is 'volume show' and the query is '-volume vol1'
 
@@ -282,7 +282,7 @@ This resource has the following attributes:
 * `role` valid values "undef", "cluster", "data", "node_mgmt", "intercluster", "cluster_mgmt"
 * `routing_group_name`
 * `use_failover_group` valid values "system_defined", "disabled", "enabled"
-* 
+*
 
 ### Example ###
 

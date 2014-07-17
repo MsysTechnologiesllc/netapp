@@ -15,10 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-action :create do
+include NetApp::Api
 
+action :create do
+  request = NaElement.new("nfs-service-create")
+
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "nfs","create")
 end
 
 action :delete do
+  request = NaElement.new("nfs-service-destroy")
 
+  # Invoke NetApp API.
+  result = invoke_api(request, new_resource.svm)
+
+  # Check the result for any errors.
+  check_result(result, "nfs","delete")
 end

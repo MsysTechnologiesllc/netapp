@@ -20,6 +20,4 @@
 actions :create, :delete
 default_action :create
 
-attribute :pathname, :kind_of => String, :required => true, :name_attribute => true
 attribute :svm, :kind_of => String, :required => true
-attribute :security_rules, :kind_of => Hash
