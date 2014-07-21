@@ -18,72 +18,55 @@
 include NetApp::Api
 
 action :create do
-  # validations.
+  # validations
   raise ArgumentError, "Aggregate name should be less than 255 characters" if new_resource.name.length > 255
-  new_resource.nsswitch.each do |switch|
-    raise ArgumentError, "Invalid name-server-switch \"#{switch}\". It must be nis/file/ldap" unless ["nis", "file", "ldap"].include? switch
-  end
-
-  raise ArgumentError, "The maximum value for raid-size is 28" if new_resource.raid_size > 28
 
   # Create API Request.
-  request =  NaElement.new("aggr-create")
-  request.child_add_string("aggregate", new_resource.name)
-  request.child_add_string("allow-mixed-rpm", new_resource.allow_mixed_rpm) if new_resource.allow_mixed_rpm
-  request.child_add_string("allow-same-carrier", new_resource.allow_same_carrier) if new_resource.allow_same_carrier
-  request.child_add_string("block-type", new_resource.block_type) if new_resource.block_type
-  request.child_add_string("checksum-style", new_resource.checksum_style) if new_resource.checksum_style
-  request.child_add_string("disk-count", new_resource.disk_count) if new_resource.disk_count
-  request.child_add_string("disk-size", new_resource.disk_size) if new_resource.disk_size
-  request.child_add_string("disk-size-with-unit", new_resource.disk_size_with_unit) if new_resource.disk_size_with_unit
-  request.child_add_string("disk-type", new_resource.disk_type) if new_resource.disk_type
-  request.child_add_string("disks", new_resource.disks) if new_resource.disks
-  request.child_add_string("force-small-aggregate", new_resource.force_small_aggregate) if new_resource.force_small_aggregate
-  request.child_add_string("force-spare-pool", new_resource.force_spare_pool) if new_resource.force_spare_pool
-  request.child_add_string("ignore-pool-checks", new_resource.ignore_pool_checks) if new_resource.ignore_pool_checks
-  request.child_add_string("is-mirrored", new_resource.is_mirrored) if new_resource.is_mirrored
+  #netapp_aggr_api = Hash.new(&blk)
+  netapp_aggr_api = netapp_hash
 
-  if new_resource.mirror_disks
-    mirror_disks = NaElement.new("mirror-disks")
+  netapp_aggr_api[:api_name] = "aggr-create"
+  netapp_aggr_api[:resource] = "aggregate"
+  netapp_aggr_api[:action] = "create"
+  netapp_aggr_api[:api_attribute]["aggregate"] = new_resource.name
+  netapp_aggr_api[:api_attribute]["allow-mixed-rpm"] = new_resource.allow_mixed_rpm if new_resource.allow_mixed_rpm
+  netapp_aggr_api[:api_attribute]["allow-same-carrier"] = new_resource.allow_same_carrier if new_resource.allow_same_carrier
+  netapp_aggr_api[:api_attribute]["block-type"] = new_resource.block_type if new_resource.block_type
+  netapp_aggr_api[:api_attribute]["checksum-style"] = new_resource.checksum_style if new_resource.checksum_style
+  netapp_aggr_api[:api_attribute]["disk-count"] = new_resource.disk_count if new_resource.disk_count
+  netapp_aggr_api[:api_attribute]["disk-size"] = new_resource.disk_size if new_resource.disk_size
+  netapp_aggr_api[:api_attribute]["disk-size-with-unit"] = new_resource.disk_size_with_unit if new_resource.disk_size_with_unit
+  netapp_aggr_api[:api_attribute]["disk-type"] = new_resource.disk_type if new_resource.disk_type
+  netapp_aggr_api[:api_attribute]["disks"] = new_resource.disks if new_resource.disks
+  netapp_aggr_api[:api_attribute]["force-small-aggregate"] = new_resource.force_small_aggregate if new_resource.force_small_aggregate
+  netapp_aggr_api[:api_attribute]["force-spare-pool"] = new_resource.force_spare_pool if new_resource.force_spare_pool
+  netapp_aggr_api[:api_attribute]["ignore-pool-checks"] = new_resource.ignore_pool_checks if new_resource.ignore_pool_checks
+  netapp_aggr_api[:api_attribute]["is-mirrored"] = new_resource.is_mirrored if new_resource.is_mirrored
 
-    new_resource.mirror_disks.each do |disk|
-      disk = NaElement.new("disk-info")
-      disk.child_add_string("name", disk)
+  #Todo- verify
+  netapp_aggr_api[:api_attribute]["mirror-disks"]["disk-info"]["name"] = new_resource.mirror_disks if new_resource.mirror_disks
 
-      mirror_disks.child_add(disk)
-    end
-
-    request.child_add(mirror_disks)
-  end
-
-  if new_resource.nodes
-    new_resource.nodes.each do |node|
-      request.child_add_string("nodes", node)
-    end
-  end
-
-  request.child_add_string("pre-check", new_resource.pre_check) if new_resource.pre_check
-  request.child_add_string("raid-size", new_resource.raid_size) if new_resource.raid_size
-  request.child_add_string("raid-type", new_resource.raid_type) if new_resource.raid_type
-  request.child_add_string("rpm", new_resource.rpm) if new_resource.rpm
-  request.child_add_string("striping", new_resource.striping) if new_resource.striping
+  netapp_aggr_api[:api_attribute]["nodes"] = new_resource.nodes if new_resource.nodes
+  netapp_aggr_api[:api_attribute]["pre-check"] = new_resource.pre_check if new_resource.pre_check
+  netapp_aggr_api[:api_attribute]["raid-size"] = new_resource.raid_size if new_resource.raid_size
+  netapp_aggr_api[:api_attribute]["raid-type"] = new_resource.raid_type if new_resource.raid_type
+  netapp_aggr_api[:api_attribute]["rpm"] = new_resource.rpm if new_resource.rpm
+  netapp_aggr_api[:api_attribute]["striping"] = new_resource.striping if new_resource.striping
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "aggregate","create")
+  invoke(netapp_aggr_api)
 end
 
 action :delete do
   # Create API Request.
-  request =  NaElement.new("aggr-destroy")
-  request.child_add_string("aggregate", new_resource.name)
-  request.child_add_string("plex", new_resource.plex) if new_resource.plex
+  netapp_aggr_api = netapp_hash
+
+  netapp_aggr_api[:api_name] = "aggr-destroy"
+  netapp_aggr_api[:resource] = "aggregate"
+  netapp_aggr_api[:action] = "create"
+  netapp_aggr_api[:api_attribute]["aggregate"] = new_resource.name
+  netapp_aggr_api[:api_attribute]["plex"] = new_resource.plex if new_resource.plex
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
- check_result(result, "aggregate","delete")
+  invoke(netapp_aggr_api)
 end

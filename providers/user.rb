@@ -25,49 +25,45 @@ action :create do
   raise ArgumentError, "Argument role is required for user creation" unless new_resource.role
 
   # Create API Request.
-  request = NaElement.new("security-login-create")
-  request.child_add_string("application", new_resource.application)
-  request.child_add_string("authentication-method", new_resource.authentication)
-  request.child_add_string("role-name", new_resource.role)
-  request.child_add_string("user-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.vserver)
+  netapp_user_api = netapp_hash
 
-  request.child_add_string("password", new_resource.password) if new_resource.password
-  request.child_add_string("comment", new_resource.comment) if new_resource.comment
+  netapp_user_api[:api_name] = "security-login-create"
+  netapp_user_api[:resource] = "user"
+  netapp_user_api[:action] = "create"
+
+  netapp_user_api[:api_attribute]["application"] = new_resource.application
+  netapp_user_api[:api_attribute]["authentication-method"] = new_resource.authentication
+  netapp_user_api[:api_attribute]["role-name"] = new_resource.role
+  netapp_user_api[:api_attribute]["user-name"] =  new_resource.name
+  netapp_user_api[:api_attribute]["vserver"] = new_resource.vserver
+  netapp_user_api[:api_attribute]["password"] = new_resource.password if new_resource.password
+  netapp_user_api[:api_attribute]["comment"] = new_resource.comment if new_resource.comment
 
   if new_resource.authentication == "urm"
-    snmpv3_login_info = NaElement.new("snmpv3-login-info")
-
-    snmpv3_login_info_params = NaElement.new("snmpv3-login-info")
-    snmpv3_login_info_params.child_add_string("authentication-password", new_resource.authentication_password) if new_resource.authentication_password
-    snmpv3_login_info_params.child_add_string("authentication-protocol", new_resource.authentication_protocol) if new_resource.authentication_protocol
-    snmpv3_login_info_params.child_add_string("privacy-protocol", new_resource.privacy_protocol) if new_resource.privacy_protocol
-    snmpv3_login_info_params.child_add_string("privacy-password", new_resource.privacy_password) if new_resource.privacy_password
-    snmpv3_login_info_params.child_add_string("engine-id", new_resource.engine_id) if new_resource.engine_id
-
-    snmpv3_login_info.child_add(snmpv3_login_info_params)
-    request.child_add(snmpv3_login_info)
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-password"] = new_resource.authentication_password if new_resource.authentication_password
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-protocol"] = new_resource.authentication_protocol if new_resource.authentication_protocol
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-protocol"] = new_resource.privacy_protocol if new_resource.privacy_protocol
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-password"] = new_resource.privacy_password if new_resource.privacy_password
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["engine-id"] = new_resource.engine_id if new_resource.engine_id
   end
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "user","create")
+  invoke(netapp_user_api)
 end
 
 action :delete do
 
   # Create API Request.
-  request = NaElement.new("security-login-delete")
-  request.child_add_string("application", new_resource.application)
-  request.child_add_string("authentication-method", new_resource.authentication)
-  request.child_add_string("user-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.vserver)
+  netapp_user_api = netapp_hash
+
+  netapp_user_api[:api_name] = "security-login-delete"
+  netapp_user_api[:resource] = "user"
+  netapp_user_api[:action] = "delete"
+  netapp_user_api[:api_attribute]["application"] = new_resource.application
+  netapp_user_api[:api_attribute]["authentication-method"] = new_resource.authentication
+  netapp_user_api[:api_attribute]["user-name"] = new_resource.name
+  netapp_user_api[:api_attribute]["vserver"] = new_resource.vserver
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "user", "delete")
+  invoke(netapp_user_api)
 end

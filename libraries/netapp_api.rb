@@ -1,6 +1,10 @@
 module NetApp
   module Api
 
+    def netapp_hash
+      Hash.new{|h,k| h[k] = Hash.new(&h.default_proc)}
+    end
+
     def connect
       if node[:netapp][:url]
         @url = URI.parse(node[:netapp][:url])
@@ -42,20 +46,69 @@ module NetApp
       @server
     end
 
+    def invoke(api_hash)
+      request = generate_request(api_hash[:api_name], api_hash[:api_attribute])
+      if api_hash[:svm].empty?
+        response = invoke_api(request)
+      else
+        response = invoke_api(request, api_hash[:svm])
+      end
+      check_errors!(response, api_hash[:resource], api_hash[:action])
+    end
+
     def invoke_api(request, svm = nil)
       @server = connect
 
       # The vserver name is set as vfiler in case of a tunneled connection.
       @server.set_vfiler(svm) if svm
-
       @server.invoke_elem(request)
     end
 
-    def check_result(result, resource, action)
+    def check_errors!(result, resource, action)
       if result.results_errno != 0
         raise "#{resource} #{action} failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
       end
     end
 
+    def check_result(result, resource, action)
+
+    end
+
+    def generate_request(name, value)
+      if value.nil?
+        netapp_element = NaElement.new(name)
+        return netapp_element
+
+      elsif value.is_a? Hash
+        netapp_request = NaElement.new(name)
+        value.each do |netapp_input_name, input_value|
+          netapp_element = generate_request(netapp_input_name, input_value)
+
+          if netapp_element.is_a? Array
+            netapp_element.each do |element|
+              netapp_request.child_add(element)
+            end
+          else
+            netapp_request.child_add(netapp_element)
+          end
+        end
+        return netapp_request
+
+      elsif value.is_a? Array
+        netapp_elements = []
+        value.each do |element_val|
+          netapp_element = NaElement.new(name, element_val)
+          netapp_elements << netapp_element
+        end
+        return netapp_elements
+
+      else
+        netapp_element = NaElement.new(name,value)
+        return netapp_element
+      end
+    end
+
   end
 end
+
+

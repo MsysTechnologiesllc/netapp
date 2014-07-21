@@ -20,9 +20,9 @@
 actions :create, :delete
 default_action :create
 
-attribute :svm, :kind_of => String, :require => true
+attribute :svm, :kind_of => String, :require => true, :name_attribute => true
 
 #optional attributes
 attribute :alias, :kind_of => String
-attribute :node, :kind_of => String
+attribute :node_name, :kind_of => String
 attribute :start, :kind_of => [TrueClass, FalseClass]

@@ -2,11 +2,16 @@
 # Recipe:: demo
 
 
+netapp_aggregate "aggr4" do
+  disk_count 5
+  action :create
+end
+
 netapp_svm "demo-svm" do
   security "unix"
   aggregate "aggr1"
   volume "root_vs"
-  nsswitch ["nis"]
+  nsswitch ["nis", "file"]
 
   action :create
 end
@@ -48,6 +53,26 @@ end
 netapp_qtree 'demo-tree' do
   volume "root_vs"
   svm "demo-svm"
+
+  action :create
+end
+
+netapp_iscsi "cluster2" do
+  action :create
+end
+
+netapp_nfs "/vol/root_vs" do
+  svm "demo-svm"
+  read_only_all_hosts true
+
+  action :create
+end
+
+netapp_group "krb_unix" do
+  position 5
+  pattern "cifs"
+  replacement "EXAMPLE\\Domain Groups"
+  svm "cluster-infinite"
 
   action :create
 end

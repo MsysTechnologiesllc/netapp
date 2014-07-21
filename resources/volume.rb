@@ -22,6 +22,32 @@ default_action :create
 
 attribute :name, :kind_of => String, :required => true, :name_attribute => true
 attribute :svm, :kind_of => String
-
 attribute :aggregate, :kind_of => String, :required => true
 attribute :size, :kind_of => String, :required => true
+
+attribute :role, :kind => String, :equal_to => ["namespace", "data", "ns_mirror"]
+attribute :export_policy, :kind_of => String
+attribute :flexcache_cache_policy, :kind_of => String # can be created only using "flexcache-cache-policy-crreate".
+attribute :flexcache_fill_policy, :kind_of => String
+attribute :flexcache_origin_volume_name, :kind_of => String
+attribute :group_id, :kind_of => Integer
+attribute :is_junction_active, :kind_of => [TrueClass, FalseClass]
+attribute :is_nvfail_enabled, :kind_of => String
+attribute :is_vserver_root, :kind_of => [TrueClass, FalseClass]
+attribute :junction_path, :kind_of => String
+attribute :language, :kind_of => String
+attribute :max_dir_size, :kind_of => Integer
+attribute :max_write_alloc_blocks, :kind_of => Integer
+attribute :percentage_snapshot, :kind_of => Integer
+attribute :qos_policy_group, :kind_of => String
+attribute :snapshot_policy, :kind_of => String
+attribute :space_reserve, :kind_of => String
+attribute :storage_service, :kind_of => String
+attribute :unix_permission, :kind_of => String
+attribute :user_id, :kind_of => Integer
+attribute :vm_align_sector, :kind_of => Integer
+attribute :vm_align_suffix, :kind_of => String
+attribute :comment, :kind_of => String
+attribute :security_style, :kind_of => String, :equal_to => ["mixed", "ntfs", "unified", "unix"]
+attribute :state, :kind_of => String, :equal_to => ["online", "restricted", "offline"]
+attribute :type, :kind_of => String, :equal_to => ["rw", "ls", "dp", "dc"]

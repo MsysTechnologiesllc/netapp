@@ -35,55 +35,40 @@ action :create do
   end
 
   # Create API Request.
-  request =  NaElement.new("vserver-create")
-  request.child_add_string("vserver-name", new_resource.name)
-  request.child_add_string("root-volume-security-style", new_resource.security)
-  request.child_add_string("root-volume-aggregate", new_resource.aggregate)
-  request.child_add_string("root-volume", new_resource.volume)
+  netapp_svm_api = netapp_hash
 
-  name_server_switch = NaElement.new("name-server-switch")
+  netapp_svm_api[:api_name] = "vserver-create"
+  netapp_svm_api[:resource] = "svm"
+  netapp_svm_api[:action] = "create"
+  netapp_svm_api[:api_attribute]["vserver-name"] = new_resource.name
+  netapp_svm_api[:api_attribute]["root-volume-security-style"] = new_resource.security
+  netapp_svm_api[:api_attribute]["root-volume-aggregate"] = new_resource.aggregate
+  netapp_svm_api[:api_attribute]["root-volume"] = new_resource.volume
+  netapp_svm_api[:api_attribute]["name-server-switch"]["nsswitch"] = new_resource.nsswitch
 
-  new_resource.nsswitch.each do |switch|
-    switch = NaElement.new("nsswitch", switch)
-    name_server_switch.child_add(switch)
-  end
-  request.child_add(name_server_switch)
-
-  request.child_add_string("comment", new_resource.comment) if (new_resource.comment)
-  request.child_add_string("is-repository-vserver", new_resource.is_repository_vserver) if (new_resource.is_repository_vserver)
-  request.child_add_string("language", new_resource.language) if (new_resource.language)
-
-  if (new_resource.nmswitch)
-    name_mapping_switch = NaElement.new("name-mapping-switch")
-
-    new_resource.nmswitch.each do |switch|
-      switch = NaElement.new("nmswitch", switch)
-      name_mapping_switch.child_add(switch)
-    end
-    request.child_add(name_mapping_switch)
-  end
-
-  request.child_add_string("quota-policy", new_resource.quota_policy) if (new_resource.quota_policy)
-  request.child_add_string("return-record", new_resource.return_record) if (new_resource.return_record)
-  request.child_add_string("snapshot-policy", new_resource.snapshot_policy) if (new_resource.snapshot_policy)
+  #optional api fields
+  netapp_svm_api[:api_attribute]["comment"] = new_resource.comment if (new_resource.comment)
+  netapp_svm_api[:api_attribute]["is-repository-vserver"] = new_resource.is_repository_vserver if (new_resource.is_repository_vserver)
+  netapp_svm_api[:api_attribute]["language"] =  new_resource.language if (new_resource.language)
+  netapp_svm_api[:api_attribute]["name-mapping-switch"]["nmswitch"] = new_resource.nmswitch if new_resource.nmswitch
+  netapp_svm_api[:api_attribute]["quota-policy"] =  new_resource.quota_policy if (new_resource.quota_policy)
+  netapp_svm_api[:api_attribute]["return-record"] =  new_resource.return_record if (new_resource.return_record)
+  netapp_svm_api[:api_attribute]["snapshot-policy"] = new_resource.snapshot_policy if (new_resource.snapshot_policy)
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "svm","create")
+  invoke(netapp_svm_api)
 end
 
 action :delete do
-  #TODO before deleting vserver
-  #1- volume should be put to offline mode
-  #2- volume should be deleted
 
-  # Vserver is deleted after deleting the volume
-  request =  NaElement.new("vserver-destroy")
-  request.child_add_string("vserver-name", new_resource.name)
+  # Create API request hash.
+  netapp_svm_api = netapp_hash
 
-  result = invoke_api(request)
+  netapp_svm_api[:api_name] = "vserver-destroy"
+  netapp_svm_api[:resource] = "svm"
+  netapp_svm_api[:action] = "delete"
+  netapp_svm_api[:api_attribute]["vserver-name"] = new_resource.name
 
-  check_result(result, "svm","delete")
+  # Invoke NetApp API.
+  invoke(netapp_svm_api)
 end
