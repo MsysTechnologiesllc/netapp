@@ -70,10 +70,6 @@ module NetApp
       end
     end
 
-    def check_result(result, resource, action)
-
-    end
-
     def generate_request(name, value)
       if value.nil?
         netapp_element = NaElement.new(name)

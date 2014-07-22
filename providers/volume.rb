@@ -76,7 +76,7 @@ action :delete do
   invoke(netapp_volume_offline_api)
 
   # Create API Request.
-  netapp_volume_api = Hash.new(&blk)
+  netapp_volume_api = netapp_hash
 
   netapp_volume_api[:api_name] = "volume-destroy"
   netapp_volume_api[:resource] = "volume"
