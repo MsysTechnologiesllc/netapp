@@ -21,3 +21,20 @@ actions :create, :delete
 default_action :create
 
 attribute :svm, :kind_of => String, :required => true
+attribute :pathname, :kind_of => String, :required => true, :name_attribute => true
+
+attribute :persistent, :kind_of => [TrueClass, FalseClass]
+attribute :verbose, :kind_of => [TrueClass, FalseClass]
+attribute :anon, :kind_of => String
+attribute :nosuid, :kind_of => [TrueClass, FalseClass]
+
+attribute :read_only_all_hosts, :kind_of => [TrueClass, FalseClass]
+attribute :read_only_name, :kind_of => String
+attribute :read_only_negate, :kind_of => [TrueClass, FalseClass]
+attribute :read_write_all_hosts, :kind_of => [TrueClass, FalseClass]
+attribute :read_write_name, :kind_of => String
+attribute :read_write_negate, :kind_of => [TrueClass, FalseClass]
+attribute :root_all_hosts, :kind_of => [TrueClass, FalseClass]
+attribute :root_name, :kind_of => String
+attribute :root_negate, :kind_of => [TrueClass, FalseClass]
+attribute :flavor, :kind_of => Array

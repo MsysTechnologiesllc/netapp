@@ -20,7 +20,7 @@
 actions :create, :delete
 default_action :create
 
-attribute :direction, :kind_of => String, :equal_to => ["krb_unix", "win_unix", "unix_win"], :required => true
+attribute :direction, :kind_of => String, :equal_to => ["krb_unix", "win_unix", "unix_win"], :required => true, :name_attribute => true
 attribute :svm, :kind_of => String, :required => true
 attribute :position, :kind_of => Integer, :required => true
 attribute :pattern, :kind_of => String

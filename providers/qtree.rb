@@ -23,31 +23,35 @@ action :create do
   raise ArgumentError, "Attribute volume is required for qtree creation" unless new_resource.volume
 
   # Create API Request.
-  request = NaElement.new("qtree-create")
-  request.child_add_string("qtree", new_resource.name)
-  request.child_add_string("volume", new_resource.volume)
-  request.child_add_string("export_policy", new_resource.export_policy) if new_resource.export_policy
-  request.child_add_string("mode", new_resource.mode) if new_resource.mode
-  request.child_add_string("oplocks", new_resource.oplocks) if new_resource.oplocks
-  request.child_add_string("security-style", new_resource.security) if new_resource.security
+  netapp_qtree_api = netapp_hash
+
+  netapp_qtree_api[:api_name] = "qtree-create"
+  netapp_qtree_api[:resource] = "qtree"
+  netapp_qtree_api[:action] = "create"
+  netapp_qtree_api[:svm] = new_resource.svm
+  netapp_qtree_api[:api_attribute]["qtree"] = new_resource.name
+  netapp_qtree_api[:api_attribute]["volume"] = new_resource.volume
+  netapp_qtree_api[:api_attribute]["export-policy"] = new_resource.export_policy if new_resource.export_policy
+  netapp_qtree_api[:api_attribute]["mode"] = new_resource.mode if new_resource.mode
+  netapp_qtree_api[:api_attribute]["oplocks"] = new_resource.oplocks if new_resource.oplocks
+  netapp_qtree_api[:api_attribute]["security-style"] = new_resource.security if new_resource.security
 
   # Invoke NetApp API.
-  result = invoke_api(request,new_resource.svm)
-
-  # Check the result for any errors.
-  check_result(result, "qtree","create")
+  invoke(netapp_qtree_api)
 end
 
 action :delete do
 
   # Create API Request.
-  request = NaElement.new("qtree-delete")
-  request.child_add_string("qtree", new_resource.name)
-  request.child_add_string("force", new_resource.force) if new_resource.force
+  netapp_qtree_api = netapp_hash
+
+  netapp_qtree_api[:api_name] = "qtree-delete"
+  netapp_qtree_api[:resource] = "qtree"
+  netapp_qtree_api[:action] = "delete"
+  netapp_qtree_api[:svm] = new_resource.svm
+  netapp_qtree_api[:api_attribute]["qtree"] = new_resource.name
+  netapp_qtree_api[:api_attribute]["force"] = new_resource.force if new_resource.force
 
   # Invoke NetApp API.
-  result = invoke_api(request, new_resource.svm)
-
-  # Check the result for any errors.
-  check_result(result, "qtree","delete")
+  invoke(netapp_qtree_api)
 end

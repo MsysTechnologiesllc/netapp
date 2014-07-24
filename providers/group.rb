@@ -24,30 +24,33 @@ action :create do
   raise ArgumentError, "Attribute replacement is required for group creation" if new_resource.position > 1024 || new_resource.position < 1
 
   # Create API Request.
-  request =  NaElement.new("group-mapping-create")
-  request.child_add_string("direction", new_resource.direction)
-  request.child_add_string("pattern", new_resource.pattern)
-  request.child_add_string("position", new_resource.position)
-  request.child_add_string("replacement", new_resource.replacement)
+  netapp_group_api = netapp_hash
 
-  request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
+  netapp_group_api[:api_name] = "group-mapping-create"
+  netapp_group_api[:resource] = "group"
+  netapp_group_api[:action] = "create"
+  netapp_group_api[:svm] = new_resource.svm
+  netapp_group_api[:api_attribute]["direction"] = new_resource.name
+  netapp_group_api[:api_attribute]["pattern"] = new_resource.pattern
+  netapp_group_api[:api_attribute]["position"] = new_resource.position
+  netapp_group_api[:api_attribute]["replacement"] = new_resource.replacement
+  netapp_group_api[:api_attribute]["return-record"] = new_resource.return_record if new_resource.return_record
 
   # Invoke NetApp API.
-  result = invoke_api(request, new_resource.svm)
-
-  # Check the result for any errors.
-  check_result(result, "group","create")
+  invoke(netapp_group_api)
 end
 
 action :delete do
   # Create API Request.
-  request =  NaElement.new("group-mapping-delete")
-  request.child_add_string("direction", new_resource.direction)
-  request.child_add_string("position", new_resource.position)
+  netapp_group_api = netapp_hash
+
+  netapp_group_api[:api_name] = "group-mapping-delete"
+  netapp_group_api[:resource] = "group"
+  netapp_group_api[:action] = "delete"
+  netapp_group_api[:svm] = new_resource.svm
+  netapp_group_api[:api_attribute]["direction"] = new_resource.name
+  netapp_group_api[:api_attribute]["position"] = new_resource.position
 
   # Invoke NetApp API.
-  result = invoke_api(request, new_resource.svm)
-
-  # Check the result for any errors.
-  check_result(result, "group","create")
+  invoke(netapp_group_api)
 end

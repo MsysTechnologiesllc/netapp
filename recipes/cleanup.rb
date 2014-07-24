@@ -37,3 +37,18 @@ end
 netapp_svm 'demo-svm' do
   action :delete
 end
+
+netapp_aggregate "aggr4" do
+  action :delete
+end
+
+netapp_group "krb_unix" do
+  position 5
+  svm "cluster-infinite"
+
+  action :delete
+end
+
+netapp_iscsi "cluster2" do
+  action :delete
+end

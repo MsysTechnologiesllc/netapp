@@ -20,32 +20,34 @@ include NetApp::Api
 action :create do
 
   # Create API Request.
-  request = NaElement.new("security-login-role-create")
-  request.child_add_string("role-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.svm)
-  request.child_add_string("command-directory-name", new_resource.command_directory)
-  request.child_add_string("access-level", new_resource.access_level) if new_resource.access_level
-  request.child_add_string("return-record", new_resource.return_record) if new_resource.return_record
-  request.child_add_string("role-query", new_resource.role_query) if new_resource.role_query
+  netapp_role_api = netapp_hash
+
+  netapp_role_api[:api_name] = "security-login-role-create"
+  netapp_role_api[:resource] = "role"
+  netapp_role_api[:action] = "create"
+  netapp_role_api[:api_attribute]["role-name"] = new_resource.name
+  netapp_role_api[:api_attribute]["vserver"] = new_resource.svm
+  netapp_role_api[:api_attribute]["command-directory-name"] = new_resource.command_directory
+  netapp_role_api[:api_attribute]["access-level"] = new_resource.access_level if new_resource.access_level
+  netapp_role_api[:api_attribute]["return-record"] = new_resource.return_record if new_resource.return_record
+  netapp_role_api[:api_attribute]["role-query"] = new_resource.role_query if new_resource.role_query
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "role","create")
+  invoke(netapp_role_api)
 end
 
 action :delete do
 
   # Create API Request.
-  request = NaElement.new("security-login-role-delete")
-  request.child_add_string("role-name", new_resource.name)
-  request.child_add_string("vserver", new_resource.svm)
-  request.child_add_string("command-directory-name", new_resource.command_directory)
+  netapp_role_api = netapp_hash
+
+  netapp_role_api[:api_name] = "security-login-role-delete"
+  netapp_role_api[:resource] = "role"
+  netapp_role_api[:action] = "delete"
+  netapp_role_api[:api_attribute]["role-name"] = new_resource.name
+  netapp_role_api[:api_attribute]["vserver"] = new_resource.svm
+  netapp_role_api[:api_attribute]["command-directory-name"] = new_resource.command_directory
 
   # Invoke NetApp API.
-  result = invoke_api(request)
-
-  # Check the result for any errors.
-  check_result(result, "role","delete")
+  invoke(netapp_role_api)
 end
