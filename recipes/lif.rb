@@ -12,7 +12,7 @@ netapp_lif "demo-interface" do
   action :create
 end
 
-netapp_lif "demo-interface" do
+netapp_lif "demo-del-interface" do
   svm "cluster1"
 
   action :delete

@@ -1,7 +1,7 @@
 # Cookbook Name:: netapp
 # Recipe:: feature
 
-netapp_feature "foo" do
+netapp_feature "demo-feature" do
   codes ["CAYHXPKBFDUFZGABGAAAAAAAAAAA"]
 
   action :enable
