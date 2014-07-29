@@ -26,9 +26,9 @@ action :create do
   netapp_iscsi_api[:resource] = "iscsi"
   netapp_iscsi_api[:action] = "create"
   netapp_iscsi_api[:svm] = new_resource.name
-  netapp_iscsi_api[:api_attribute]["alias-name"] = new_resource.alias if new_resource.alias
-  netapp_iscsi_api[:api_attribute]["node-name"] = new_resource.node_name if new_resource.node_name
-  netapp_iscsi_api[:api_attribute]["start"] = new_resource.start if new_resource.start
+  netapp_iscsi_api[:api_attribute]["alias-name"] = new_resource.alias unless new_resource.alias.nil?
+  netapp_iscsi_api[:api_attribute]["node-name"] = new_resource.node_name unless new_resource.node_name.nil?
+  netapp_iscsi_api[:api_attribute]["start"] = new_resource.start unless new_resource.start.nil?
 
   # Invoke NetApp API.
   invoke(netapp_iscsi_api)

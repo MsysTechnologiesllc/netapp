@@ -17,49 +17,117 @@
 
 include NetApp::Api
 
-action :create do
+action :enable do
+
   # Create API Request.
-  netapp_nfs_api = netapp_hash
+  netapp_nfs_enable_api = netapp_hash
 
-  netapp_nfs_api[:api_name] = "nfs-exportfs-append-rules-2"
-  netapp_nfs_api[:resource] = "nfs"
-  netapp_nfs_api[:action] = "create"
-  netapp_nfs_api[:svm] = new_resource.svm
+  netapp_nfs_enable_api[:api_name] = "nfs-enable"
+  netapp_nfs_enable_api[:resource] = "nfs"
+  netapp_nfs_enable_api[:action] = "enable"
+  netapp_nfs_enable_api[:svm] = new_resource.name
 
-  netapp_nfs_api[:api_attribute]["persistent"] = new_resource.persistent if new_resource.persistent
-  netapp_nfs_api[:api_attribute]["verbose"] = new_resource.verbose if new_resource.verbose
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["pathname"] = new_resource.name
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["anon"] = new_resource.anon if new_resource.anon
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["nosuid"] = new_resource.nosuid if new_resource.nosuid
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["all-hosts"] = new_resource.read_only_all_hosts if new_resource.read_only_all_hosts
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["name"] = new_resource.read_only_name if new_resource.read_only_name
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["negate"] = new_resource.read_only_negate if new_resource.read_only_negate
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["all-hosts"] = new_resource.read_write_all_hosts if new_resource.read_write_all_hosts
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["name"] = new_resource.read_write_name if new_resource.read_write_name
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["negate"] = new_resource.read_write_negate if new_resource.read_write_negate
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["all-hosts"] = new_resource.root_all_hosts if new_resource.root_all_hosts
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["name"] = new_resource.root_name if new_resource.root_name
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["negate"] = new_resource.root_negate if new_resource.root_negate
-  netapp_nfs_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["sec-flavor"]["sec-flavor-info"]["flavor"] = new_resource.flavor if new_resource.flavor
-
-  # Invoke NetApp API.
-  invoke(netapp_nfs_api)
-
+  #Create and enable NFS service on the vserver
+  invoke(netapp_nfs_enable_api)
 end
 
-action :delete do
+action :disable do
+
   # Create API Request.
-  netapp_nfs_api = netapp_hash
+  netapp_nfs_disable_api = netapp_hash
 
-  netapp_nfs_api[:api_name] = "nfs-exportfs-delete-rules"
-  netapp_nfs_api[:resource] = "nfs"
-  netapp_nfs_api[:action] = "delete"
-  netapp_nfs_api[:svm] = new_resource.svm
+  netapp_nfs_disable_api[:api_name] = "nfs-disable"
+  netapp_nfs_disable_api[:resource] = "nfs"
+  netapp_nfs_disable_api[:action] = "disable"
+  netapp_nfs_disable_api[:svm] = new_resource.name
 
-  netapp_nfs_api[:api_attribute]["pathnames"]["pathname-info"]["name"] = new_resource.name
-  netapp_nfs_api[:api_attribute]["persistent"] = new_resource.persistent if new_resource.persistent
-  netapp_nfs_api[:api_attribute]["verbose"] = new_resource.verbose if new_resource.verbose
+  #Create and enable NFS service on the vserver
+  invoke(netapp_nfs_disable_api)
+end
+
+action :add_rule do
+
+  # validations.
+  raise ArgumentError, "Attribute Pathname is required to append export rules" unless new_resource.pathname
+
+  # Create API Request.
+  netapp_nfs_add_rule_api = netapp_hash
+
+  netapp_nfs_add_rule_api[:api_name] = "nfs-exportfs-append-rules-2"
+  netapp_nfs_add_rule_api[:resource] = "nfs"
+  netapp_nfs_add_rule_api[:action] = "add_rule"
+  netapp_nfs_add_rule_api[:svm] = new_resource.name
+
+  netapp_nfs_add_rule_api[:api_attribute]["persistent"] = new_resource.persistent unless new_resource.persistent.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["verbose"] = new_resource.verbose unless new_resource.verbose.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["pathname"] = new_resource.pathname
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["anon"] = new_resource.anon unless new_resource.anon.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["nosuid"] = new_resource.nosuid unless new_resource.nosuid.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["all-hosts"] = new_resource.read_only_all_hosts unless new_resource.read_only_all_hosts.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["name"] = new_resource.read_only_name unless new_resource.read_only_name.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["negate"] = new_resource.read_only_negate unless new_resource.read_only_negate.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["all-hosts"] = new_resource.read_write_all_hosts unless new_resource.read_write_all_hosts.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["name"] = new_resource.read_write_name unless new_resource.read_write_name.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["negate"] = new_resource.read_write_negate unless new_resource.read_write_negate.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["all-hosts"] = new_resource.root_all_hosts unless new_resource.root_all_hosts.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["name"] = new_resource.root_name unless new_resource.root_name.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["negate"] = new_resource.root_negate unless new_resource.root_negate.nil?
+  netapp_nfs_add_rule_api[:api_attribute]["rules"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["sec-flavor"]["sec-flavor-info"]["flavor"] = new_resource.flavor unless new_resource.flavor.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_nfs_api)
+  invoke(netapp_nfs_add_rule_api)
+end
+
+action :modify_rule do
+
+  # validations.
+  raise ArgumentError, "Attribute Pathname is required to modify export rules" unless new_resource.pathname
+  raise ArgumentError, "Attribute Persistent is required to modify export rules" unless new_resource.pathname
+
+  # Create API Request.
+  netapp_nfs_modify_rule_api = netapp_hash
+
+  netapp_nfs_modify_rule_api[:api_name] = "nfs-exportfs-modify-rule-2"
+  netapp_nfs_modify_rule_api[:resource] = "nfs"
+  netapp_nfs_modify_rule_api[:action] = "modify_rule"
+  netapp_nfs_modify_rule_api[:svm] = new_resource.name
+
+  netapp_nfs_modify_rule_api[:api_attribute]["persistent"] = new_resource.persistent
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["pathname"] = new_resource.pathname
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["anon"] = new_resource.anon unless new_resource.anon.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["nosuid"] = new_resource.nosuid unless new_resource.nosuid.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["all-hosts"] = new_resource.read_only_all_hosts unless new_resource.read_only_all_hosts.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["name"] = new_resource.read_only_name unless new_resource.read_only_name.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-only"]["exports-hostname-info"]["negate"] = new_resource.read_only_negate unless new_resource.read_only_negate.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["all-hosts"] = new_resource.read_write_all_hosts unless new_resource.read_write_all_hosts.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["name"] = new_resource.read_write_name unless new_resource.read_write_name.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["read-write"]["exports-hostname-info"]["negate"] = new_resource.read_write_negate unless new_resource.read_write_negate.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["all-hosts"] = new_resource.root_all_hosts unless new_resource.root_all_hosts.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["name"] = new_resource.root_name unless new_resource.root_name.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["root"]["exports-hostname-info"]["negate"] = new_resource.root_negate unless new_resource.root_negate.nil?
+  netapp_nfs_modify_rule_api[:api_attribute]["rule"]["exports-rule-info-2"]["security-rules"]["security-rule-info"]["sec-flavor"]["sec-flavor-info"]["flavor"] = new_resource.flavor unless new_resource.flavor.nil?
+
+  # Invoke NetApp API.
+  invoke(netapp_nfs_modify_rule_api)
+end
+
+action :delete_rule do
+
+   # validations.
+  raise ArgumentError, "Attribute Pathname is required to delete export rules" unless new_resource.pathname
+
+  # Create API Request.
+  netapp_nfs_delete_rule_api = netapp_hash
+
+  netapp_nfs_delete_rule_api[:api_name] = "nfs-exportfs-delete-rules"
+  netapp_nfs_delete_rule_api[:resource] = "nfs"
+  netapp_nfs_delete_rule_api[:action] = "delete_rule"
+  netapp_nfs_delete_rule_api[:svm] = new_resource.name
+
+  netapp_nfs_delete_rule_api[:api_attribute]["pathnames"]["pathname-info"]["name"] = new_resource.pathname
+  netapp_nfs_delete_rule_api[:api_attribute]["persistent"] = new_resource.persistent unless new_resource.persistent.nil?
+  netapp_nfs_delete_rule_api[:api_attribute]["verbose"] = new_resource.verbose unless new_resource.verbose.nil?
+
+  # Invoke NetApp API.
+  invoke(netapp_nfs_delete_rule_api)
 end

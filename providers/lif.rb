@@ -24,7 +24,7 @@ action :create do
   raise ArgumentError, "Attribute home_port is required to create network interface" unless new_resource.home_port
   raise ArgumentError, "Attribute role is required to create network interface" unless new_resource.role
 
-  if new_resource.data_protocols
+  unless new_resource.data_protocols
     new_resource.data_protocols.each do |protocol|
       raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless ["nfs", "cifs", "iscsi", "fcp", "fcache", "none"].include? protocol
     end
@@ -41,22 +41,22 @@ action :create do
   netapp_lif_api[:api_attribute]["home-port"] = new_resource.home_port
   netapp_lif_api[:api_attribute]["interface-name"] = new_resource.name
   netapp_lif_api[:api_attribute]["role"] = new_resource.role
-  netapp_lif_api[:api_attribute]["address"] = new_resource.address if new_resource.address
-  netapp_lif_api[:api_attribute]["administrative-status"] = new_resource.administrative_status if new_resource.administrative_status
-  netapp_lif_api[:api_attribute]["comment"] = new_resource.comment if new_resource.comment
+  netapp_lif_api[:api_attribute]["address"] = new_resource.address unless new_resource.address.nil?
+  netapp_lif_api[:api_attribute]["administrative-status"] = new_resource.administrative_status unless new_resource.administrative_status.nil?
+  netapp_lif_api[:api_attribute]["comment"] = new_resource.comment unless new_resource.comment.nil?
   #Todo- verify
-  netapp_lif_api[:api_attribute]["data-protocols"] = new_resource.data_protocols if new_resource.data_protocols
-  netapp_lif_api[:api_attribute]["failover-group"] = new_resource.failover_group if new_resource.failover_group
-  netapp_lif_api[:api_attribute]["failover-policy"] = new_resource.failover_policy if new_resource.failover_policy
-  netapp_lif_api[:api_attribute]["firewall-policy"] = new_resource.firewall_policy if new_resource.firewall_policy
-  netapp_lif_api[:api_attribute]["is-auto-revert"] = new_resource.is_auto_revert if new_resource.is_auto_revert
-  netapp_lif_api[:api_attribute]["is-ipv4-link-local"] = new_resource.is_ipv4_link_local if new_resource.is_ipv4_link_local
-  netapp_lif_api[:api_attribute]["listen-for-dns-query"] = new_resource.listen_for_dns_query if new_resource.listen_for_dns_query
-  netapp_lif_api[:api_attribute]["netmask"] = new_resource.netmask if new_resource.netmask
-  netapp_lif_api[:api_attribute]["netmask-length"] = new_resource.netmask_length if new_resource.netmask_length
-  netapp_lif_api[:api_attribute]["return-record"] = new_resource.return_record if new_resource.return_record
-  netapp_lif_api[:api_attribute]["routing-group"] = new_resource.routing_group if new_resource.routing_group_name
-  netapp_lif_api[:api_attribute]["use-failover-group"] = new_resource.use_failover_group if new_resource.use_failover_group
+  netapp_lif_api[:api_attribute]["data-protocols"] = new_resource.data_protocols unless new_resource.data_protocols.nil?
+  netapp_lif_api[:api_attribute]["failover-group"] = new_resource.failover_group unless new_resource.failover_group.nil?
+  netapp_lif_api[:api_attribute]["failover-policy"] = new_resource.failover_policy unless new_resource.failover_policy.nil?
+  netapp_lif_api[:api_attribute]["firewall-policy"] = new_resource.firewall_policy unless new_resource.firewall_policy.nil?
+  netapp_lif_api[:api_attribute]["is-auto-revert"] = new_resource.is_auto_revert unless new_resource.is_auto_revert.nil?
+  netapp_lif_api[:api_attribute]["is-ipv4-link-local"] = new_resource.is_ipv4_link_local unless new_resource.is_ipv4_link_local.nil?
+  netapp_lif_api[:api_attribute]["listen-for-dns-query"] = new_resource.listen_for_dns_query unless new_resource.listen_for_dns_query.nil?
+  netapp_lif_api[:api_attribute]["netmask"] = new_resource.netmask unless new_resource.netmask.nil?
+  netapp_lif_api[:api_attribute]["netmask-length"] = new_resource.netmask_length unless new_resource.netmask_length.nil?
+  netapp_lif_api[:api_attribute]["return-record"] = new_resource.return_record unless new_resource.return_record.nil?
+  netapp_lif_api[:api_attribute]["routing-group"] = new_resource.routing_group unless new_resource.routing_group_name.nil?
+  netapp_lif_api[:api_attribute]["use-failover-group"] = new_resource.use_failover_group unless new_resource.use_failover_group.nil?
 
   # Invoke NetApp API.
   invoke(netapp_lif_api)

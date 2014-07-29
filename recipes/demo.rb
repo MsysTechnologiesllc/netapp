@@ -61,13 +61,6 @@ netapp_iscsi "demo-svm" do
   action :create
 end
 
-netapp_nfs "/vol/root_vs" do
-  svm "demo-svm"
-  read_only_all_hosts true
-
-  action :create
-end
-
 netapp_group "krb_unix" do
   position 5
   pattern "cifs"
@@ -83,4 +76,10 @@ netapp_volume 'demo_vol' do
   size "250m"
 
   action :create
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+
+  action :enable
 end
