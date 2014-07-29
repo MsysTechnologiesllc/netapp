@@ -37,12 +37,22 @@ end
 action :delete do
 
   # Create API Request.
+  netapp_iscsi_offline_api = netapp_hash
+
+  netapp_iscsi_offline_api[:api_name] = "iscsi-service-stop"
+  netapp_iscsi_offline_api[:resource] = "iscsi"
+  netapp_iscsi_offline_api[:action] = "offline"
+  netapp_iscsi_offline_api[:svm] = new_resource.name
+
+ # Invoke NetApp API.
+  invoke(netapp_iscsi_offline_api)
+
   netapp_iscsi_api = netapp_hash
 
   netapp_iscsi_api[:api_name] = "iscsi-service-destroy"
   netapp_iscsi_api[:resource] = "iscsi"
   netapp_iscsi_api[:action] = "delete"
-  netapp_iscsi_api[:svm] = new_resource.svm
+  netapp_iscsi_api[:svm] = new_resource.name
 
  # Invoke NetApp API.
   invoke(netapp_iscsi_api)

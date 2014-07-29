@@ -28,6 +28,16 @@ netapp_qtree '/vol/root_vs/demo-tree' do
   action :delete
 end
 
+netapp_iscsi "demo-svm" do
+  action :delete
+end
+
+netapp_volume 'demo_vol' do
+  svm "demo-svm"
+
+  action :delete
+end
+
 netapp_volume 'root_vs' do
   svm "demo-svm"
 
@@ -38,17 +48,13 @@ netapp_svm 'demo-svm' do
   action :delete
 end
 
-netapp_aggregate "aggr4" do
+netapp_aggregate "aggr1" do
   action :delete
 end
 
 netapp_group "krb_unix" do
   position 5
-  svm "cluster-infinite"
+  svm "vserver-infinite"
 
-  action :delete
-end
-
-netapp_iscsi "cluster2" do
   action :delete
 end

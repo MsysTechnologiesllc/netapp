@@ -16,6 +16,7 @@ module NetApp
         @server.set_admin_user(@url.user, @url.password)
         @server.set_transport_type(@url.scheme.upcase)
         @server.set_port(@url.port)
+        @server.set_timeout(node[:netapp][:api][:timeout]) if node[:netapp][:api][:timeout]
 
         if match = %r{/([^/]+)}.match(@url.path)
           @vfiler = match.captures[0]
@@ -23,26 +24,24 @@ module NetApp
         end
 
       else
-        @server = begin
+        raise ArgumentError, "no user specified" unless node[:netapp][:user]
+        raise ArgumentError, "no password specified" unless node[:netapp][:password]
+        raise ArgumentError, "no host specified" unless node[:netapp][:fqdn]
 
-          raise ArgumentError, "no user specified" unless node[:netapp][:user]
-          raise ArgumentError, "no password specified" unless node[:netapp][:password]
-          raise ArgumentError, "no host specified" unless node[:netapp][:fqdn]
+        @server = NaServer.new(node[:netapp][:fqdn], 1, 13)
+        @server.set_admin_user(node[:netapp][:user], node[:netapp][:password])
+        @server.set_timeout(node[:netapp][:api][:timeout]) if node[:netapp][:api][:timeout]
+        @server.set_vfiler(node[:netapp][:virtual_filer]) if node[:netapp][:virtual_filer]
 
-          NaServer.new(node[:netapp][:fqdn], 1, 13)
-          @server.set_admin_user(node[:netapp][user], node[:netapp][:password])
-
-          if node[:netapp][https] == true
-            @server.set_transport_type('HTTPS')
-            @server.set_port(443)
-          else
-            @server.set_transport_type('HTTP')
-            @server.set_port(8080)
-          end
-
-          @server.set_vfiler(node[:netapp][:virtual_filer]) if node[:netapp][:virtual_filer]
+        if node[:netapp][:https] == true
+          @server.set_transport_type('HTTPS')
+          @server.set_port(443)
+        else
+          @server.set_transport_type('HTTP')
+          @server.set_port(8080)
         end
       end
+
       @server
     end
 

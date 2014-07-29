@@ -2,7 +2,7 @@
 # Recipe:: demo
 
 
-netapp_aggregate "aggr4" do
+netapp_aggregate "aggr1" do
   disk_count 5
   action :create
 end
@@ -57,7 +57,7 @@ netapp_qtree 'demo-tree' do
   action :create
 end
 
-netapp_iscsi "cluster2" do
+netapp_iscsi "demo-svm" do
   action :create
 end
 
@@ -72,7 +72,15 @@ netapp_group "krb_unix" do
   position 5
   pattern "cifs"
   replacement "EXAMPLE\\Domain Groups"
-  svm "cluster-infinite"
+  svm "vserver-infinite"
+
+  action :create
+end
+
+netapp_volume 'demo_vol' do
+  svm "demo-svm"
+  aggregate "aggr1"
+  size "250m"
 
   action :create
 end

@@ -1,5 +1,6 @@
 # Added by ChefSpec
 require 'chefspec'
+require_relative 'matchers/netapp_matcher'
 
 # Uncomment to use ChefSpec's Berkshelf extension
 # require 'chefspec/berkshelf'

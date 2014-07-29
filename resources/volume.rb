@@ -25,7 +25,7 @@ attribute :svm, :kind_of => String
 attribute :aggregate, :kind_of => String, :required => true
 attribute :size, :kind_of => String, :required => true
 
-attribute :role, :kind => String, :equal_to => ["namespace", "data", "ns_mirror"]
+attribute :role, :kind_of => String, :equal_to => ["namespace", "data", "ns_mirror"]
 attribute :export_policy, :kind_of => String
 attribute :flexcache_cache_policy, :kind_of => String # can be created only using "flexcache-cache-policy-crreate".
 attribute :flexcache_fill_policy, :kind_of => String
