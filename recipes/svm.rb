@@ -9,3 +9,7 @@ netapp_svm "demo-svm" do
 
   action :create
 end
+
+netapp_svm 'del-svm' do
+  action :delete
+end

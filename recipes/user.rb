@@ -1,7 +1,7 @@
 # Cookbook Name:: netapp
 # Recipe:: user
 
-netapp_user "exmple-user" do
+netapp_user "demo-user" do
   vserver "demo-svm"
   role "demo-role"
   application "ontapi"
@@ -11,7 +11,7 @@ netapp_user "exmple-user" do
   action :create
 end
 
-netapp_user "exmple-user" do
+netapp_user "demo-del-user" do
   vserver "demo-svm"
   application "ontapi"
   authentication "password"

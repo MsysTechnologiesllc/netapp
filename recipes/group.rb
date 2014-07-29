@@ -10,7 +10,7 @@ netapp_group "unix_win" do
   action :create
 end
 
-netapp_group "unix_win" do
+netapp_group "krb_unix" do
   position 1
   svm "cluster2"
 

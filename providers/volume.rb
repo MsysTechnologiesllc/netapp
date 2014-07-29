@@ -57,7 +57,7 @@ action :create do
   netapp_volume_api[:api_attribute]["volume-type"] = new_resource.type if new_resource.type
 
   # Invoke NetApp API.
-  invoke(netapp_feature_api)
+  invoke(netapp_volume_api)
 end
 
 action :delete do

@@ -9,7 +9,7 @@ netapp_volume 'demo_vol' do
   action :create
 end
 
-netapp_volume 'demo_vol' do
+netapp_volume 'demo_del_vol' do
   svm "cluster2"
 
   action :delete

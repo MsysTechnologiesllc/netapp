@@ -1,10 +1,10 @@
 # Cookbook Name:: netapp
 # Recipe:: iscsi
 
-netapp_iscsi "cluster2" do
+netapp_iscsi "demo-cluster" do
   action :create
 end
 
-netapp_iscsi "cluster2" do
+netapp_iscsi "demo-del-cluster" do
   action :delete
 end
