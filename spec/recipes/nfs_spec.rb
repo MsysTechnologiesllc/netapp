@@ -6,15 +6,11 @@ describe 'netapp::nfs' do
     let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe)}
 
     it 'creates an nfs' do
-      expect(chef_run).to create_netapp_nfs('demo-nfs').with(
-        svm: "cluster2"
-        )
+      expect(chef_run).to enable_netapp_nfs('cluster2')
     end
 
     it 'deletes an nfs' do
-      expect(chef_run).to delete_netapp_nfs('demo-del-nfs').with(
-          svm: "cluster2"
-        )
+      expect(chef_run).to disable_netapp_nfs('cluster3')
     end
   end
 end

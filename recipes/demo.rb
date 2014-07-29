@@ -17,7 +17,7 @@ netapp_svm "demo-svm" do
 end
 
 netapp_feature "demo-feature" do
-  codes ["CAYHXPKBFDUFZGABGAAAAAAAAAAA"]
+  codes ["QFATWPKBFDUFZGABGAAAAAAAAAAA"]
 
   action :enable
 end

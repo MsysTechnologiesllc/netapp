@@ -1,14 +1,13 @@
 # Cookbook Name:: netapp
 # Recipe:: nfs
 
-netapp_nfs "demo-nfs" do
+netapp_nfs "cluster2" do
   svm "cluster2"
 
-  action:create
+  action:enable
 end
 
-netapp_nfs "demo-del-nfs" do
-  svm "cluster2"
+netapp_nfs "cluster3" do
 
-  action:delete
+  action:disable
 end
