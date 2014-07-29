@@ -24,7 +24,7 @@ action :create do
   raise ArgumentError, "Attribute home_port is required to create network interface" unless new_resource.home_port
   raise ArgumentError, "Attribute role is required to create network interface" unless new_resource.role
 
-  unless new_resource.data_protocols
+  if new_resource.data_protocols
     new_resource.data_protocols.each do |protocol|
       raise ArgumentError, "Invalid protocol \"#{protocol}\". It must be nfs/cifs/iscsi/fcp/fcache/none" unless ["nfs", "cifs", "iscsi", "fcp", "fcache", "none"].include? protocol
     end

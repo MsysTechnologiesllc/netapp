@@ -19,7 +19,7 @@ include NetApp::Api
 
 action :create do
   # validations
-  raise ArgumentError, "Aggregate name should be less than 255 characters" unless new_resource.name.length > 255
+  raise ArgumentError, "Aggregate name should be less than 255 characters" if new_resource.name.length > 255
 
   # Create API Request.
   netapp_aggr_api = netapp_hash

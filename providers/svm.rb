@@ -28,7 +28,7 @@ action :create do
     raise ArgumentError, "Invalid name-server-switch \"#{switch}\". It must be nis/file/ldap" unless ["nis", "file", "ldap"].include? switch
   end
 
-  unless new_resource.nmswitch
+  if new_resource.nmswitch
     new_resource.nmswitch.each do |switch|
       raise ArgumentError, "Invalid name-mapping-switch \"#{switch}\". It must be file/ldap" unless ["file", "ldap"].include? switch
     end
