@@ -6,8 +6,8 @@ module NetApp
     end
 
     def connect
-      if node[:netapp][:url]
-        @url = URI.parse(node[:netapp][:url])
+      if node['netapp']['url']
+        @url = URI.parse(node['netapp']['url'])
         raise ArgumentError, "Invalid scheme #{@url.scheme}. Must be https/http" unless @url.scheme == 'https' || @url.scheme == 'http'
         raise ArgumentError, "no user specified" unless @url.user
         raise ArgumentError, "no password specified" unless @url.password
@@ -16,7 +16,7 @@ module NetApp
         @server.set_admin_user(@url.user, @url.password)
         @server.set_transport_type(@url.scheme.upcase)
         @server.set_port(@url.port)
-        @server.set_timeout(node[:netapp][:api][:timeout]) if node[:netapp][:api][:timeout]
+        @server.set_timeout(node['netapp']['api']['timeout']) if node['netapp']['api']['timeout']
 
         if match = %r{/([^/]+)}.match(@url.path)
           @vfiler = match.captures[0]
@@ -24,16 +24,16 @@ module NetApp
         end
 
       else
-        raise ArgumentError, "no user specified" unless node[:netapp][:user]
-        raise ArgumentError, "no password specified" unless node[:netapp][:password]
-        raise ArgumentError, "no host specified" unless node[:netapp][:fqdn]
+        raise ArgumentError, "no user specified" unless node['netapp']['user']
+        raise ArgumentError, "no password specified" unless node['netapp']['password']
+        raise ArgumentError, "no host specified" unless node['netapp']['fqdn']
 
-        @server = NaServer.new(node[:netapp][:fqdn], 1, 13)
-        @server.set_admin_user(node[:netapp][:user], node[:netapp][:password])
-        @server.set_timeout(node[:netapp][:api][:timeout]) if node[:netapp][:api][:timeout]
-        @server.set_vfiler(node[:netapp][:virtual_filer]) if node[:netapp][:virtual_filer]
+        @server = NaServer.new(node['netapp']['fqdn'], 1, 13)
+        @server.set_admin_user(node['netapp']['user'], node['netapp']['password'])
+        @server.set_timeout(node['netapp']['api']['timeout']) if node['netapp']['api']['timeout']
+        @server.set_vfiler(node['netapp']['virtual_filer']) if node['netapp']['virtual_filer']
 
-        if node[:netapp][:https] == true
+        if node['netapp']['https'] == true
           @server.set_transport_type('HTTPS')
           @server.set_port(443)
         else
@@ -64,7 +64,13 @@ module NetApp
     end
 
     def check_errors!(result, resource, action)
-      if result.results_errno != 0
+      if result.results_errno == 0  # The Api ran successfully and returned no error.
+        return true
+      elsif result.results_errno == "17" || result.results_errno == "14922" || result.results_errno == "13130" || result.results_errno ==  "13080" || result.results_errno == "13001" || result.results_errno ==  "15698" || result.results_errno == "15661" || result.results_errno ==  "13040"
+        #If the resource already exists, then ignore the error and proceed with the next resource.
+        #Do not update resource count.
+        return false
+      else
         raise "#{resource} #{action} failed.Error no- #{result.results_errno}. Reason- #{result.results_reason}."
       end
     end
@@ -105,5 +111,3 @@ module NetApp
 
   end
 end
-
-

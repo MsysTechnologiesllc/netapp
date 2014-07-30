@@ -29,6 +29,7 @@ action :enable do
 
   #Create and enable NFS service on the vserver
   invoke(netapp_nfs_enable_api)
+  new_resource.updated_by_last_action(true)
 end
 
 action :disable do
@@ -43,6 +44,7 @@ action :disable do
 
   #Create and enable NFS service on the vserver
   invoke(netapp_nfs_disable_api)
+  new_resource.updated_by_last_action(true)
 end
 
 action :add_rule do
@@ -76,6 +78,7 @@ action :add_rule do
 
   # Invoke NetApp API.
   invoke(netapp_nfs_add_rule_api)
+  new_resource.updated_by_last_action(true)
 end
 
 action :modify_rule do
@@ -109,6 +112,7 @@ action :modify_rule do
 
   # Invoke NetApp API.
   invoke(netapp_nfs_modify_rule_api)
+  new_resource.updated_by_last_action(true)
 end
 
 action :delete_rule do
@@ -130,4 +134,5 @@ action :delete_rule do
 
   # Invoke NetApp API.
   invoke(netapp_nfs_delete_rule_api)
+  new_resource.updated_by_last_action(true)
 end

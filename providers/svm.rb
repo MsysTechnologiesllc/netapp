@@ -56,7 +56,8 @@ action :create do
   netapp_svm_api[:api_attribute]["snapshot-policy"] = new_resource.snapshot_policy unless new_resource.snapshot_policy.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_svm_api)
+  resource_update = invoke(netapp_svm_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -70,5 +71,6 @@ action :delete do
   netapp_svm_api[:api_attribute]["vserver-name"] = new_resource.name
 
   # Invoke NetApp API.
-  invoke(netapp_svm_api)
+  resource_update = invoke(netapp_svm_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

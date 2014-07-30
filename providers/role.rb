@@ -33,7 +33,8 @@ action :create do
   netapp_role_api[:api_attribute]["role-query"] = new_resource.role_query unless new_resource.role_query.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_role_api)
+  resource_update = invoke(netapp_role_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -49,5 +50,6 @@ action :delete do
   netapp_role_api[:api_attribute]["command-directory-name"] = new_resource.command_directory
 
   # Invoke NetApp API.
-  invoke(netapp_role_api)
+  resource_update = invoke(netapp_role_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

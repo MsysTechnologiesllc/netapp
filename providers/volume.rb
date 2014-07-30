@@ -57,7 +57,8 @@ action :create do
   netapp_volume_api[:api_attribute]["volume-type"] = new_resource.type unless new_resource.type.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_volume_api)
+  resource_update = invoke(netapp_volume_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -85,5 +86,6 @@ action :delete do
   netapp_volume_api[:api_attribute]["name"] = new_resource.name
 
   # Invoke NetApp API to destroy volume
-  invoke(netapp_volume_api)
+  resource_update = invoke(netapp_volume_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

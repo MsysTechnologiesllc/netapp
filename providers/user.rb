@@ -48,7 +48,8 @@ action :create do
   end
 
   # Invoke NetApp API.
-  invoke(netapp_user_api)
+  resource_update = invoke(netapp_user_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -65,5 +66,6 @@ action :delete do
   netapp_user_api[:api_attribute]["vserver"] = new_resource.vserver
 
   # Invoke NetApp API.
-  invoke(netapp_user_api)
+  resource_update = invoke(netapp_user_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

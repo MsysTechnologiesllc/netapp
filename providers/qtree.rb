@@ -37,7 +37,8 @@ action :create do
   netapp_qtree_api[:api_attribute]["security-style"] = new_resource.security unless new_resource.security.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_qtree_api)
+  resource_update = invoke(netapp_qtree_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -53,5 +54,6 @@ action :delete do
   netapp_qtree_api[:api_attribute]["force"] = new_resource.force unless new_resource.force.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_qtree_api)
+  resource_update = invoke(netapp_qtree_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

@@ -50,7 +50,8 @@ action :create do
   netapp_aggr_api[:api_attribute]["striping"] = new_resource.striping unless new_resource.striping.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_aggr_api)
+  resource_update = invoke(netapp_aggr_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -64,5 +65,6 @@ action :delete do
   netapp_aggr_api[:api_attribute]["plex"] = new_resource.plex unless new_resource.plex.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_aggr_api)
+  resource_update = invoke(netapp_aggr_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

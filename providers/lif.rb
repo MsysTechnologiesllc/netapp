@@ -59,7 +59,8 @@ action :create do
   netapp_lif_api[:api_attribute]["use-failover-group"] = new_resource.use_failover_group unless new_resource.use_failover_group.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_lif_api)
+  resource_update = invoke(netapp_lif_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -74,5 +75,6 @@ action :delete do
   netapp_lif_api[:api_attribute]["interface-name"] = new_resource.name
 
   # Invoke NetApp API.
-  invoke(netapp_lif_api)
+  resource_update = invoke(netapp_lif_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
