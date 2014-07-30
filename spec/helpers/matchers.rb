@@ -51,6 +51,18 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new('netapp_nfs', :disable, resource_name)
   end
 
+  def add_rule_netapp_nfs(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new('netapp_nfs', :add_rule, resource_name)
+  end
+
+  def modify_rule_netapp_nfs(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new('netapp_nfs', :modify_rule, resource_name)
+  end
+
+  def delete_rule_netapp_nfs(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new('netapp_nfs', :delete_rule, resource_name)
+  end
+
   def create_netapp_qtree(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new('netapp_qtree', :create, resource_name)
   end

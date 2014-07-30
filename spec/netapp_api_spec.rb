@@ -13,8 +13,8 @@ describe 'create netapp connection' do
       @netapp = Netapp_Wrapper.new
       @netapp.define_singleton_method(:node) do
         node = Hash.new
-        node[:netapp] = {:url => "http://root:secret@pfiler01.example.com/vfiler01" }
-        node[:netapp][:api] = {:timeout => 40000 }
+        node['netapp'] = {'url' => "http://root:secret@pfiler01.example.com/vfiler01" }
+        node['netapp']['api'] = {'timeout' => 40000 }
         node
       end
       @server = double
@@ -36,13 +36,13 @@ describe 'create netapp connection' do
       @netapp = Netapp_Wrapper.new
       @netapp.define_singleton_method(:node) do
         node =  Hash.new
-        node[:netapp] = Hash.new
-        node[:netapp][:user] = "root"
-        node[:netapp][:password] = "secret"
-        node[:netapp][:fqdn] = "pfiler01.example.com"
-        node[:netapp][:https] = true
-        node[:netapp][:virtual_filer] = "vfiler01"
-        node[:netapp][:api] = {:timeout => 40000}
+        node['netapp'] = Hash.new
+        node['netapp']['user'] = "root"
+        node['netapp']['password'] = "secret"
+        node['netapp']['fqdn'] = "pfiler01.example.com"
+        node['netapp']['https'] = true
+        node['netapp']['virtual_filer'] = "vfiler01"
+        node['netapp']['api'] = {'timeout' => 40000}
         node
       end
       @server = double

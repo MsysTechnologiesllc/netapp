@@ -11,7 +11,7 @@ netapp_svm "demo-svm" do
   security "unix"
   aggregate "aggr1"
   volume "root_vs"
-  nsswitch ["nis", "file"]
+  nsswitch ["nis"]
 
   action :create
 end
@@ -82,4 +82,19 @@ netapp_nfs "demo-svm" do
   pathname "/vol/root_vs"
 
   action :enable
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+  read_write_all_hosts true
+
+  action :add_rule
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+  persistent true
+  read_write_all_hosts false
+
+  action :modify_rule
 end

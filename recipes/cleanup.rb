@@ -28,6 +28,16 @@ netapp_qtree '/vol/root_vs/demo-tree' do
   action :delete
 end
 
+netapp_nfs "demo-svm" do
+  action :delete_rule
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+
+  action :disable
+end
+
 netapp_iscsi "demo-svm" do
   action :delete
 end

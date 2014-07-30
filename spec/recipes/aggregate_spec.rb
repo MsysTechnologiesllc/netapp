@@ -7,7 +7,7 @@ describe 'netapp::aggregate' do
 
     it 'creates a new aggregate' do
       expect(chef_run).to create_netapp_aggregate('aggr-demo').with(
-          disk_count: 5,
+          disk_count: 5
         )
     end
 

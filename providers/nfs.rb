@@ -117,9 +117,6 @@ end
 
 action :delete_rule do
 
-   # validations.
-  raise ArgumentError, "Attribute Pathname is required to delete export rules" unless new_resource.pathname
-
   # Create API Request.
   netapp_nfs_delete_rule_api = netapp_hash
 
@@ -128,7 +125,7 @@ action :delete_rule do
   netapp_nfs_delete_rule_api[:action] = "delete_rule"
   netapp_nfs_delete_rule_api[:svm] = new_resource.name
 
-  netapp_nfs_delete_rule_api[:api_attribute]["pathnames"]["pathname-info"]["name"] = new_resource.pathname
+  netapp_nfs_delete_rule_api[:api_attribute]["pathnames"]["pathname-info"]["name"] = "/"
   netapp_nfs_delete_rule_api[:api_attribute]["persistent"] = new_resource.persistent unless new_resource.persistent.nil?
   netapp_nfs_delete_rule_api[:api_attribute]["verbose"] = new_resource.verbose unless new_resource.verbose.nil?
 
