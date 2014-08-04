@@ -10,7 +10,17 @@ The netapp cookbook manages the Clustered Data ONTAP (CDOT) filers using the Net
 Requirements
 ------------
 #### NetApp Manageability SDK Library v5.0
+
 You can download it from [NetApp](http://mysupport.netapp.com/NOW/cgi-bin/software?product=NetApp+Manageability+SDK&platform=All+Platforms) after you have created an account on [NetApp NOW](https://support.netapp.com/eservice/public/now.do)
+
+- Save the NetApp SDK to this NetApp cookbook in the "libraries" dir.
+
+- Update the NaServer.rb to specify the path of NaElement. Replace the line:
+` require NaElement
+`
+With -
+` require File.dirname(__FILE__) + "/NaElement"
+`
 
 NetApp connection
 -----------------
