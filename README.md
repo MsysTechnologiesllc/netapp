@@ -1,10 +1,6 @@
 netapp Cookbook
 ===============
 
-[![Build Status](http://img.shields.io/travis/ClogenyTechnologies/netapp.svg)][travis]
-
-[travis]: https://travis-ci.org/ClogenyTechnologies/netapp
-
 The netapp cookbook manages the Clustered Data ONTAP (CDOT) filers using the NetApp ZAPI. The actions are cluster-wide or Storage Virtual Machine (SVM, formerly known as Vservers) specific.
 
 Requirements
