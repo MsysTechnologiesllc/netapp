@@ -36,4 +36,5 @@ action :enable do
 
   # Invoke NetApp API.
   invoke(netapp_feature_api)
+  new_resource.updated_by_last_action(true)
 end

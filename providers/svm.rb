@@ -22,7 +22,7 @@ action :create do
   # validations.
   raise ArgumentError, "Attribute volume is required for SVM creation" unless new_resource.volume
   raise ArgumentError, "Attribute aggregate is required for SVM creation" unless new_resource.aggregate
-  raise ArgumentError, "Attribute security if required for SVM creation" unless new_resource.security
+  raise ArgumentError, "Attribute security unless required for SVM creation" unless new_resource.security
 
   new_resource.nsswitch.each do |switch|
     raise ArgumentError, "Invalid name-server-switch \"#{switch}\". It must be nis/file/ldap" unless ["nis", "file", "ldap"].include? switch
@@ -47,16 +47,17 @@ action :create do
   netapp_svm_api[:api_attribute]["name-server-switch"]["nsswitch"] = new_resource.nsswitch
 
   #optional api fields
-  netapp_svm_api[:api_attribute]["comment"] = new_resource.comment if (new_resource.comment)
-  netapp_svm_api[:api_attribute]["is-repository-vserver"] = new_resource.is_repository_vserver if (new_resource.is_repository_vserver)
-  netapp_svm_api[:api_attribute]["language"] =  new_resource.language if (new_resource.language)
-  netapp_svm_api[:api_attribute]["name-mapping-switch"]["nmswitch"] = new_resource.nmswitch if new_resource.nmswitch
-  netapp_svm_api[:api_attribute]["quota-policy"] =  new_resource.quota_policy if (new_resource.quota_policy)
-  netapp_svm_api[:api_attribute]["return-record"] =  new_resource.return_record if (new_resource.return_record)
-  netapp_svm_api[:api_attribute]["snapshot-policy"] = new_resource.snapshot_policy if (new_resource.snapshot_policy)
+  netapp_svm_api[:api_attribute]["comment"] = new_resource.comment unless new_resource.comment.nil?
+  netapp_svm_api[:api_attribute]["is-repository-vserver"] = new_resource.is_repository_vserver unless new_resource.is_repository_vserver.nil?
+  netapp_svm_api[:api_attribute]["language"] =  new_resource.language unless new_resource.language.nil?
+  netapp_svm_api[:api_attribute]["name-mapping-switch"]["nmswitch"] = new_resource.nmswitch unless new_resource.nmswitch.nil?
+  netapp_svm_api[:api_attribute]["quota-policy"] =  new_resource.quota_policy unless new_resource.quota_policy.nil?
+  netapp_svm_api[:api_attribute]["return-record"] =  new_resource.return_record unless new_resource.return_record.nil?
+  netapp_svm_api[:api_attribute]["snapshot-policy"] = new_resource.snapshot_policy unless new_resource.snapshot_policy.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_svm_api)
+  resource_update = invoke(netapp_svm_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -70,5 +71,6 @@ action :delete do
   netapp_svm_api[:api_attribute]["vserver-name"] = new_resource.name
 
   # Invoke NetApp API.
-  invoke(netapp_svm_api)
+  resource_update = invoke(netapp_svm_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

@@ -17,11 +17,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-actions :create, :delete
-default_action :create
+actions :enable, :disable, :add_rule, :modify_rule, :delete_rule
+default_action :enable
 
-attribute :svm, :kind_of => String, :required => true
-attribute :pathname, :kind_of => String, :required => true, :name_attribute => true
+attribute :svm, :kind_of => String, :required => true, :name_attribute => true
+attribute :pathname, :kind_of => String
 
 attribute :persistent, :kind_of => [TrueClass, FalseClass]
 attribute :verbose, :kind_of => [TrueClass, FalseClass]

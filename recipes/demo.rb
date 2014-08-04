@@ -11,13 +11,13 @@ netapp_svm "demo-svm" do
   security "unix"
   aggregate "aggr1"
   volume "root_vs"
-  nsswitch ["nis", "file"]
+  nsswitch ["nis"]
 
   action :create
 end
 
 netapp_feature "demo-feature" do
-  codes ["CAYHXPKBFDUFZGABGAAAAAAAAAAA"]
+  codes ["QFATWPKBFDUFZGABGAAAAAAAAAAA"]
 
   action :enable
 end
@@ -61,13 +61,6 @@ netapp_iscsi "demo-svm" do
   action :create
 end
 
-netapp_nfs "/vol/root_vs" do
-  svm "demo-svm"
-  read_only_all_hosts true
-
-  action :create
-end
-
 netapp_group "krb_unix" do
   position 5
   pattern "cifs"
@@ -83,4 +76,25 @@ netapp_volume 'demo_vol' do
   size "250m"
 
   action :create
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+
+  action :enable
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+  read_write_all_hosts true
+
+  action :add_rule
+end
+
+netapp_nfs "demo-svm" do
+  pathname "/vol/root_vs"
+  persistent true
+  read_write_all_hosts false
+
+  action :modify_rule
 end

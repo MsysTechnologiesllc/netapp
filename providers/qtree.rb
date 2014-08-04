@@ -31,13 +31,14 @@ action :create do
   netapp_qtree_api[:svm] = new_resource.svm
   netapp_qtree_api[:api_attribute]["qtree"] = new_resource.name
   netapp_qtree_api[:api_attribute]["volume"] = new_resource.volume
-  netapp_qtree_api[:api_attribute]["export-policy"] = new_resource.export_policy if new_resource.export_policy
-  netapp_qtree_api[:api_attribute]["mode"] = new_resource.mode if new_resource.mode
-  netapp_qtree_api[:api_attribute]["oplocks"] = new_resource.oplocks if new_resource.oplocks
-  netapp_qtree_api[:api_attribute]["security-style"] = new_resource.security if new_resource.security
+  netapp_qtree_api[:api_attribute]["export-policy"] = new_resource.export_policy unless new_resource.export_policy.nil?
+  netapp_qtree_api[:api_attribute]["mode"] = new_resource.mode unless new_resource.mode.nil?
+  netapp_qtree_api[:api_attribute]["oplocks"] = new_resource.oplocks unless new_resource.oplocks.nil?
+  netapp_qtree_api[:api_attribute]["security-style"] = new_resource.security unless new_resource.security.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_qtree_api)
+  resource_update = invoke(netapp_qtree_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -50,8 +51,9 @@ action :delete do
   netapp_qtree_api[:action] = "delete"
   netapp_qtree_api[:svm] = new_resource.svm
   netapp_qtree_api[:api_attribute]["qtree"] = new_resource.name
-  netapp_qtree_api[:api_attribute]["force"] = new_resource.force if new_resource.force
+  netapp_qtree_api[:api_attribute]["force"] = new_resource.force unless new_resource.force.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_qtree_api)
+  resource_update = invoke(netapp_qtree_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

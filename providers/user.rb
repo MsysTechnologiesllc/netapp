@@ -36,19 +36,20 @@ action :create do
   netapp_user_api[:api_attribute]["role-name"] = new_resource.role
   netapp_user_api[:api_attribute]["user-name"] =  new_resource.name
   netapp_user_api[:api_attribute]["vserver"] = new_resource.vserver
-  netapp_user_api[:api_attribute]["password"] = new_resource.password if new_resource.password
-  netapp_user_api[:api_attribute]["comment"] = new_resource.comment if new_resource.comment
+  netapp_user_api[:api_attribute]["password"] = new_resource.password unless new_resource.password.nil?
+  netapp_user_api[:api_attribute]["comment"] = new_resource.comment unless new_resource.comment.nil?
 
-  if new_resource.authentication == "urm"
-    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-password"] = new_resource.authentication_password if new_resource.authentication_password
-    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-protocol"] = new_resource.authentication_protocol if new_resource.authentication_protocol
-    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-protocol"] = new_resource.privacy_protocol if new_resource.privacy_protocol
-    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-password"] = new_resource.privacy_password if new_resource.privacy_password
-    netapp_user_api[:api_attribute]["snmpv3-login-info"]["engine-id"] = new_resource.engine_id if new_resource.engine_id
+  unless new_resource.authentication == "urm"
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-password"] = new_resource.authentication_password unless new_resource.authentication_password.nil?
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["authentication-protocol"] = new_resource.authentication_protocol unless new_resource.authentication_protocol.nil?
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-protocol"] = new_resource.privacy_protocol unless new_resource.privacy_protocol.nil?
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["privacy-password"] = new_resource.privacy_password unless new_resource.privacy_password.nil?
+    netapp_user_api[:api_attribute]["snmpv3-login-info"]["engine-id"] = new_resource.engine_id unless new_resource.engine_id.nil?
   end
 
   # Invoke NetApp API.
-  invoke(netapp_user_api)
+  resource_update = invoke(netapp_user_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -65,5 +66,6 @@ action :delete do
   netapp_user_api[:api_attribute]["vserver"] = new_resource.vserver
 
   # Invoke NetApp API.
-  invoke(netapp_user_api)
+  resource_update = invoke(netapp_user_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

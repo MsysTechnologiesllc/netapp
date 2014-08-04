@@ -34,10 +34,11 @@ action :create do
   netapp_group_api[:api_attribute]["pattern"] = new_resource.pattern
   netapp_group_api[:api_attribute]["position"] = new_resource.position
   netapp_group_api[:api_attribute]["replacement"] = new_resource.replacement
-  netapp_group_api[:api_attribute]["return-record"] = new_resource.return_record if new_resource.return_record
+  netapp_group_api[:api_attribute]["return-record"] = new_resource.return_record unless new_resource.return_record.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_group_api)
+  resource_update = invoke(netapp_group_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -52,5 +53,6 @@ action :delete do
   netapp_group_api[:api_attribute]["position"] = new_resource.position
 
   # Invoke NetApp API.
-  invoke(netapp_group_api)
+  resource_update = invoke(netapp_group_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end

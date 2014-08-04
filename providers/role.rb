@@ -28,12 +28,13 @@ action :create do
   netapp_role_api[:api_attribute]["role-name"] = new_resource.name
   netapp_role_api[:api_attribute]["vserver"] = new_resource.svm
   netapp_role_api[:api_attribute]["command-directory-name"] = new_resource.command_directory
-  netapp_role_api[:api_attribute]["access-level"] = new_resource.access_level if new_resource.access_level
-  netapp_role_api[:api_attribute]["return-record"] = new_resource.return_record if new_resource.return_record
-  netapp_role_api[:api_attribute]["role-query"] = new_resource.role_query if new_resource.role_query
+  netapp_role_api[:api_attribute]["access-level"] = new_resource.access_level unless new_resource.access_level.nil?
+  netapp_role_api[:api_attribute]["return-record"] = new_resource.return_record unless new_resource.return_record.nil?
+  netapp_role_api[:api_attribute]["role-query"] = new_resource.role_query unless new_resource.role_query.nil?
 
   # Invoke NetApp API.
-  invoke(netapp_role_api)
+  resource_update = invoke(netapp_role_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
 
 action :delete do
@@ -49,5 +50,6 @@ action :delete do
   netapp_role_api[:api_attribute]["command-directory-name"] = new_resource.command_directory
 
   # Invoke NetApp API.
-  invoke(netapp_role_api)
+  resource_update = invoke(netapp_role_api)
+  new_resource.updated_by_last_action(true) if resource_update
 end
