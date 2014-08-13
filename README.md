@@ -1,7 +1,7 @@
-netapp Cookbook
+NetApp Cookbook
 ===============
 
-The netapp cookbook manages the Clustered Data ONTAP (CDOT) filers using the NetApp ZAPI. The actions are cluster-wide or Storage Virtual Machine (SVM, formerly known as Vservers) specific.
+The NetApp cookbook manages Clustered Data ONTAP clusters using the NetApp Manageability SDK. Both cluster-wide and Storage Virtual Machine (SVM, formerly known as Vservers) specific operations are supported.
 
 Requirements
 ------------
@@ -20,9 +20,9 @@ With -
 
 NetApp connection
 -----------------
-The ZAPI connection is made over HTTP or HTTPS, with a user account that exists on the NetApp storage cluster. The user is only granted HTTP login and API roles, meaning that the user has no permission to do anything outside of ZAPI. The root user account also works but NetApp does not recommend using it. The connection settings are managed by attributes in the cookbook but are also exposed in Common attributes for the NetApp Resources.
+The ZAPI connection is made over HTTP or HTTPS, with a user account that exists on the NetApp storage cluster. If you specify an account that only has SVM administration privileges (rather than cluster administration privileges), some features of the NetApp cookbook will not work. The connection settings are managed by attributes in the cookbook but are also exposed in Common attributes for the NetApp resources.
 
-    ['netapp']['url'] = 'https://root:secret@pfiler01.example.com/vfiler01'
+    ['netapp']['url'] = 'https://root:secret@pfiler01.example.com/svm01'
 
 or
 
@@ -30,7 +30,7 @@ or
     ['netapp']['user'] string
     ['netapp']['password'] string
     ['netapp']['fqdn'] string
-    ['netapp']['virtual_filer'] string
+    ['netapp']['vserver'] string
 
 NetApp Resources
 ================
