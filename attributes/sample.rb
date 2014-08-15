@@ -8,4 +8,4 @@
 # default[:netapp][:user] = 'root'
 # default[:netapp][:password] = 'secret'
 # default[:netapp][:fqdn] = 'pfiler01.example.com'
-# default[:netapp][:virtual_filer] = 'vfiler01'
+# default[:netapp][:vserver] = 'vfiler01'

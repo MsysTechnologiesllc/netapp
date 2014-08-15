@@ -31,7 +31,7 @@ module NetApp
         @server = NaServer.new(node['netapp']['fqdn'], 1, 13)
         @server.set_admin_user(node['netapp']['user'], node['netapp']['password'])
         @server.set_timeout(node['netapp']['api']['timeout']) if node['netapp']['api']['timeout']
-        @server.set_vfiler(node['netapp']['virtual_filer']) if node['netapp']['virtual_filer']
+        @server.set_vfiler(node['netapp']['vserver']) if node['netapp']['vserver']
 
         if node['netapp']['https'] == true
           @server.set_transport_type('HTTPS')
