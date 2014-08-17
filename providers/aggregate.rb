@@ -1,5 +1,5 @@
 # Cookbook Name:: netapp
-# Provider:: svm
+# Provider:: aggregate
 #
 # Copyright:: 2014, Chef Software, Inc <legal@getchef.com>
 #
