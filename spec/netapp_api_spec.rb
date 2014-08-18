@@ -41,7 +41,7 @@ describe 'create netapp connection' do
         node['netapp']['password'] = "secret"
         node['netapp']['fqdn'] = "pfiler01.example.com"
         node['netapp']['https'] = true
-        node['netapp']['virtual_filer'] = "vfiler01"
+        node['netapp']['vserver'] = "vfiler01"
         node['netapp']['api'] = {'timeout' => 40000}
         node
       end
